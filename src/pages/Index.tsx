@@ -1,10 +1,18 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { CapstoneProject, SortField, SortDirection } from "@/types/capstone";
 import { sampleProjects } from "@/data/sampleProjects";
-import ProjectCard from "@/components/ProjectCard";
 import AddProjectDialog from "@/components/AddProjectDialog";
+import ProjectDetailDialog from "@/components/ProjectDetailDialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
@@ -12,7 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, ArrowUpDown, BookOpen, GraduationCap } from "lucide-react";
+import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown } from "lucide-react";
+import { toast } from "sonner";
 
 const monthNames = [
   "", "January", "February", "March", "April", "May", "June",
@@ -24,8 +33,25 @@ const Index = () => {
   const [search, setSearch] = useState("");
   const [sortField, setSortField] = useState<SortField>("date");
   const [sortDir, setSortDir] = useState<SortDirection>("desc");
+  const [selectedProject, setSelectedProject] = useState<CapstoneProject | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const toggleDir = () => setSortDir(d => (d === "asc" ? "desc" : "asc"));
+  const toggleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDir(d => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDir("asc");
+    }
+  };
+
+  const SortIcon = ({ field }: { field: SortField }) => {
+    if (sortField !== field) return <ArrowUpDown className="w-3 h-3 ml-1 opacity-30" />;
+    return sortDir === "asc"
+      ? <ChevronUp className="w-3 h-3 ml-1" />
+      : <ChevronDown className="w-3 h-3 ml-1" />;
+  };
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
@@ -40,21 +66,11 @@ const Index = () => {
     list.sort((a, b) => {
       let cmp = 0;
       switch (sortField) {
-        case "title":
-          cmp = a.title.localeCompare(b.title);
-          break;
-        case "author":
-          cmp = a.authors[0].localeCompare(b.authors[0]);
-          break;
-        case "adviser":
-          cmp = a.adviser.localeCompare(b.adviser);
-          break;
-        case "date":
-          cmp = a.year * 100 + a.month - (b.year * 100 + b.month);
-          break;
-        case "coordinator":
-          cmp = a.thesisCoordinator.localeCompare(b.thesisCoordinator);
-          break;
+        case "title": cmp = a.title.localeCompare(b.title); break;
+        case "author": cmp = a.authors[0].localeCompare(b.authors[0]); break;
+        case "adviser": cmp = a.adviser.localeCompare(b.adviser); break;
+        case "date": cmp = a.year * 100 + a.month - (b.year * 100 + b.month); break;
+        case "coordinator": cmp = a.thesisCoordinator.localeCompare(b.thesisCoordinator); break;
       }
       return sortDir === "asc" ? cmp : -cmp;
     });
@@ -66,24 +82,89 @@ const Index = () => {
     setProjects(prev => [project, ...prev]);
   };
 
+  const handleRowClick = (project: CapstoneProject) => {
+    setSelectedProject(project);
+    setDetailOpen(true);
+  };
+
+  const exportCSV = () => {
+    const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator"];
+    const rows = filtered.map(p => [
+      `"${p.title}"`,
+      `"${p.authors.join("; ")}"`,
+      `"${p.adviser}"`,
+      `"${p.panelMembers.join("; ")}"`,
+      monthNames[p.month],
+      p.year,
+      `"${p.thesisCoordinator}"`,
+    ]);
+    const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "capstone_projects.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("CSV exported successfully!");
+  };
+
+  const importCSV = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      const lines = text.split("\n").filter(l => l.trim());
+      if (lines.length < 2) {
+        toast.error("CSV file is empty or invalid.");
+        return;
+      }
+      const newProjects: CapstoneProject[] = [];
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].match(/(".*?"|[^,]+)/g)?.map(c => c.replace(/^"|"$/g, "").trim()) || [];
+        if (cols.length < 7) continue;
+        const monthIdx = monthNames.indexOf(cols[4]);
+        newProjects.push({
+          id: crypto.randomUUID(),
+          title: cols[0],
+          authors: cols[1].split(";").map(a => a.trim()).filter(Boolean),
+          adviser: cols[2],
+          panelMembers: cols[3].split(";").map(m => m.trim()).filter(Boolean),
+          month: monthIdx > 0 ? monthIdx : 1,
+          year: parseInt(cols[5]) || new Date().getFullYear(),
+          thesisCoordinator: cols[6],
+        });
+      }
+      if (newProjects.length > 0) {
+        setProjects(prev => [...newProjects, ...prev]);
+        toast.success(`Imported ${newProjects.length} project(s)!`);
+      } else {
+        toast.error("No valid projects found in CSV.");
+      }
+    };
+    reader.readAsText(file);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
+      {/* Hero / Header */}
       <header className="border-b border-border/60 bg-card">
-        <div className="container max-w-6xl py-8">
-          <div className="flex items-center gap-3 mb-1">
-            <GraduationCap className="w-8 h-8 text-accent" />
+        <div className="container max-w-6xl py-10">
+          <div className="flex items-center gap-3 mb-2">
+            <GraduationCap className="w-9 h-9 text-accent" />
             <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground tracking-tight">
               Capstone Catalog
             </h1>
           </div>
-          <p className="text-muted-foreground font-sans ml-11">
-            Browse, organize, and manage academic capstone project records
+          <p className="text-muted-foreground font-sans ml-12 max-w-lg">
+            Browse, search, and manage academic capstone project records in one place.
           </p>
         </div>
       </header>
 
-      {/* Toolbar */}
+      {/* Search + Actions */}
       <div className="container max-w-6xl py-6">
         <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
           <div className="relative flex-1 max-w-md w-full">
@@ -96,27 +177,18 @@ const Index = () => {
             />
           </div>
           <div className="flex gap-2 items-center">
-            <Select value={sortField} onValueChange={v => setSortField(v as SortField)}>
-              <SelectTrigger className="w-[160px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="date">Sort by Date</SelectItem>
-                <SelectItem value="title">Sort by Title</SelectItem>
-                <SelectItem value="author">Sort by Author</SelectItem>
-                <SelectItem value="adviser">Sort by Adviser</SelectItem>
-                <SelectItem value="coordinator">Sort by Coordinator</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button variant="outline" size="icon" onClick={toggleDir} title={sortDir === "asc" ? "Ascending" : "Descending"}>
-              <ArrowUpDown className="w-4 h-4" />
+            <Button variant="outline" size="sm" onClick={exportCSV} className="gap-1.5">
+              <Download className="w-4 h-4" /> Export CSV
             </Button>
+            <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="gap-1.5">
+              <Upload className="w-4 h-4" /> Import CSV
+            </Button>
+            <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={importCSV} />
             <AddProjectDialog onAdd={handleAdd} />
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="flex gap-4 mt-4 text-sm text-muted-foreground">
+        <div className="flex gap-4 mt-3 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <BookOpen className="w-4 h-4" />
             {filtered.length} project{filtered.length !== 1 ? "s" : ""}
@@ -124,7 +196,7 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Project Grid */}
+      {/* Table */}
       <div className="container max-w-6xl pb-12">
         {filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
@@ -133,13 +205,62 @@ const Index = () => {
             <p className="text-sm mt-1">Try adjusting your search or add a new project</p>
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2">
-            {filtered.map((project, i) => (
-              <ProjectCard key={project.id} project={project} index={i} />
-            ))}
+          <div className="rounded-lg border border-border/60 bg-card overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("title")}>
+                    <span className="flex items-center">Title <SortIcon field="title" /></span>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("author")}>
+                    <span className="flex items-center">Authors <SortIcon field="author" /></span>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none hidden md:table-cell" onClick={() => toggleSort("adviser")}>
+                    <span className="flex items-center">Adviser <SortIcon field="adviser" /></span>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none hidden lg:table-cell" onClick={() => toggleSort("coordinator")}>
+                    <span className="flex items-center">Coordinator <SortIcon field="coordinator" /></span>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none text-right" onClick={() => toggleSort("date")}>
+                    <span className="flex items-center justify-end">Date <SortIcon field="date" /></span>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.map((project) => (
+                  <TableRow
+                    key={project.id}
+                    className="cursor-pointer"
+                    onClick={() => handleRowClick(project)}
+                  >
+                    <TableCell className="font-medium max-w-[280px]">
+                      <span className="line-clamp-2">{project.title}</span>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground max-w-[200px]">
+                      <span className="line-clamp-1">{project.authors.join(", ")}</span>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground hidden md:table-cell">
+                      {project.adviser}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground hidden lg:table-cell">
+                      {project.thesisCoordinator}
+                    </TableCell>
+                    <TableCell className="text-right text-muted-foreground whitespace-nowrap">
+                      {monthNames[project.month].slice(0, 3)} {project.year}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         )}
       </div>
+
+      <ProjectDetailDialog
+        project={selectedProject}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+      />
     </div>
   );
 };
