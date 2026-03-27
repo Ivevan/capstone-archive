@@ -135,6 +135,7 @@ const Index = () => {
           month: monthIdx > 0 ? monthIdx : 1,
           year: parseInt(cols[5]) || new Date().getFullYear(),
           thesisCoordinator: cols[6],
+          driveLink: cols[7]?.trim() || undefined,
         });
       }
       if (newProjects.length > 0) {

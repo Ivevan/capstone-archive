@@ -196,6 +196,11 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
             <Input value={coordinator} onChange={e => setCoordinator(e.target.value)} placeholder="Coordinator name" />
           </div>
 
+          <div>
+            <Label>Google Drive Link <span className="text-muted-foreground font-normal">(Abstract, Approval Sheet, Book Cover)</span></Label>
+            <Input value={driveLink} onChange={e => setDriveLink(e.target.value)} placeholder="https://drive.google.com/drive/folders/..." />
+          </div>
+
           <Button onClick={handleSubmit} className="w-full mt-2">
             Save Project
           </Button>
