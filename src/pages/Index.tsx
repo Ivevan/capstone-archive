@@ -224,6 +224,7 @@ const Index = () => {
                   <TableHead className="cursor-pointer select-none text-right" onClick={() => toggleSort("date")}>
                     <span className="flex items-center justify-end">Date <SortIcon field="date" /></span>
                   </TableHead>
+                  <TableHead className="text-center w-[60px]">Drive</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
