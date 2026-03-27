@@ -32,6 +32,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2023,
     month: 11,
     thesisCoordinator: "Dr. Ramon Estrada",
+    driveLink: "https://drive.google.com/drive/folders/example3",
   },
   {
     id: "4",
