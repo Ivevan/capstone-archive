@@ -88,7 +88,7 @@ const Index = () => {
   };
 
   const exportCSV = () => {
-    const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator"];
+    const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator", "Drive Link"];
     const rows = filtered.map(p => [
       `"${p.title}"`,
       `"${p.authors.join("; ")}"`,
@@ -97,6 +97,7 @@ const Index = () => {
       monthNames[p.month],
       p.year,
       `"${p.thesisCoordinator}"`,
+      `"${p.driveLink || ""}"`,
     ]);
     const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
