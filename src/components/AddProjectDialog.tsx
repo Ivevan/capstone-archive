@@ -41,6 +41,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [coordinator, setCoordinator] = useState("");
+  const [driveLink, setDriveLink] = useState("");
 
   const addAuthor = () => {
     if (authors.length < 4) setAuthors([...authors, ""]);
