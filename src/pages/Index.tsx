@@ -249,6 +249,22 @@ const Index = () => {
                     <TableCell className="text-right text-muted-foreground whitespace-nowrap">
                       {monthNames[project.month].slice(0, 3)} {project.year}
                     </TableCell>
+                    <TableCell className="text-center">
+                      {project.driveLink ? (
+                        <a
+                          href={project.driveLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-md hover:bg-accent/10 text-accent transition-colors"
+                          title="Open Drive folder (Abstract, Approval Sheet, Book Cover)"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      ) : (
+                        <span className="text-muted-foreground/30">—</span>
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
