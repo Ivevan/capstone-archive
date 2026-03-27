@@ -7,6 +7,7 @@ export interface CapstoneProject {
   year: number;
   month: number;
   thesisCoordinator: string;
+  driveLink?: string; // Google Drive folder with Abstract, Approval Sheet, Book Cover
 }
 
 export type SortField = 'title' | 'author' | 'adviser' | 'date' | 'coordinator';

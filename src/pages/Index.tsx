@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown } from "lucide-react";
+import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
 const monthNames = [
@@ -88,7 +88,7 @@ const Index = () => {
   };
 
   const exportCSV = () => {
-    const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator"];
+    const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator", "Drive Link"];
     const rows = filtered.map(p => [
       `"${p.title}"`,
       `"${p.authors.join("; ")}"`,
@@ -97,6 +97,7 @@ const Index = () => {
       monthNames[p.month],
       p.year,
       `"${p.thesisCoordinator}"`,
+      `"${p.driveLink || ""}"`,
     ]);
     const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
@@ -134,6 +135,7 @@ const Index = () => {
           month: monthIdx > 0 ? monthIdx : 1,
           year: parseInt(cols[5]) || new Date().getFullYear(),
           thesisCoordinator: cols[6],
+          driveLink: cols[7]?.trim() || undefined,
         });
       }
       if (newProjects.length > 0) {
@@ -224,6 +226,7 @@ const Index = () => {
                   <TableHead className="cursor-pointer select-none text-right" onClick={() => toggleSort("date")}>
                     <span className="flex items-center justify-end">Date <SortIcon field="date" /></span>
                   </TableHead>
+                  <TableHead className="text-center w-[60px]">Drive</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -247,6 +250,22 @@ const Index = () => {
                     </TableCell>
                     <TableCell className="text-right text-muted-foreground whitespace-nowrap">
                       {monthNames[project.month].slice(0, 3)} {project.year}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {project.driveLink ? (
+                        <a
+                          href={project.driveLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-md hover:bg-accent/10 text-accent transition-colors"
+                          title="Open Drive folder (Abstract, Approval Sheet, Book Cover)"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      ) : (
+                        <span className="text-muted-foreground/30">—</span>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

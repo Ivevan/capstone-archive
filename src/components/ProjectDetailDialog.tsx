@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, User, Users, BookOpen, GraduationCap } from "lucide-react";
+import { CalendarDays, User, Users, BookOpen, GraduationCap, ExternalLink } from "lucide-react";
 
 const monthNames = [
   "", "January", "February", "March", "April", "May", "June",
@@ -67,6 +67,25 @@ const ProjectDetailDialog = ({ project, open, onOpenChange }: ProjectDetailDialo
               <p className="text-foreground text-sm">{project.thesisCoordinator}</p>
             </div>
           </div>
+
+          {project.driveLink && (
+            <div className="flex items-start gap-2">
+              <ExternalLink className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+              <div>
+                <span className="text-muted-foreground font-medium text-xs uppercase tracking-wide">Drive Folder</span>
+                <p className="text-sm">
+                  <a
+                    href={project.driveLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-accent underline underline-offset-2 hover:text-accent/80"
+                  >
+                    Abstract, Approval Sheet, Book Cover
+                  </a>
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

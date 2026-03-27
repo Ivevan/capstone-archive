@@ -10,6 +10,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2024,
     month: 3,
     thesisCoordinator: "Dr. Patricia Lim",
+    driveLink: "https://drive.google.com/drive/folders/example1",
   },
   {
     id: "2",
@@ -20,6 +21,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2024,
     month: 6,
     thesisCoordinator: "Dr. Patricia Lim",
+    driveLink: "https://drive.google.com/drive/folders/example2",
   },
   {
     id: "3",
@@ -30,6 +32,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2023,
     month: 11,
     thesisCoordinator: "Dr. Ramon Estrada",
+    driveLink: "https://drive.google.com/drive/folders/example3",
   },
   {
     id: "4",
@@ -50,6 +53,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2023,
     month: 8,
     thesisCoordinator: "Dr. Patricia Lim",
+    driveLink: "https://drive.google.com/drive/folders/example5",
   },
   {
     id: "6",

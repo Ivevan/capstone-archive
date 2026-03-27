@@ -41,6 +41,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [coordinator, setCoordinator] = useState("");
+  const [driveLink, setDriveLink] = useState("");
 
   const addAuthor = () => {
     if (authors.length < 4) setAuthors([...authors, ""]);
@@ -68,7 +69,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
 
   const reset = () => {
     setTitle(""); setAuthors([""]); setPanelMembers([""]); setAdviser("");
-    setMonth(""); setYear(""); setCoordinator("");
+    setMonth(""); setYear(""); setCoordinator(""); setDriveLink("");
   };
 
   const handleSubmit = () => {
@@ -89,6 +90,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
       year: parseInt(year),
       month: parseInt(month),
       thesisCoordinator: coordinator.trim(),
+      driveLink: driveLink.trim() || undefined,
     };
 
     onAdd(project);
@@ -192,6 +194,11 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
           <div>
             <Label>Thesis Coordinator *</Label>
             <Input value={coordinator} onChange={e => setCoordinator(e.target.value)} placeholder="Coordinator name" />
+          </div>
+
+          <div>
+            <Label>Google Drive Link <span className="text-muted-foreground font-normal">(Abstract, Approval Sheet, Book Cover)</span></Label>
+            <Input value={driveLink} onChange={e => setDriveLink(e.target.value)} placeholder="https://drive.google.com/drive/folders/..." />
           </div>
 
           <Button onClick={handleSubmit} className="w-full mt-2">
