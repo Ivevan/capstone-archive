@@ -90,6 +90,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
       year: parseInt(year),
       month: parseInt(month),
       thesisCoordinator: coordinator.trim(),
+      driveLink: driveLink.trim() || undefined,
     };
 
     onAdd(project);
