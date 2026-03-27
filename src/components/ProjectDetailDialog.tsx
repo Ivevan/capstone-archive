@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, User, Users, BookOpen, GraduationCap } from "lucide-react";
+import { CalendarDays, User, Users, BookOpen, GraduationCap, ExternalLink } from "lucide-react";
 
 const monthNames = [
   "", "January", "February", "March", "April", "May", "June",
