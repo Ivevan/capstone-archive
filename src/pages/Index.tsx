@@ -160,6 +160,9 @@ const Index = () => {
           </h1>
           <span className="hidden sm:inline text-muted-foreground text-sm ml-2">— Academic project records</span>
         </div>
+        <p className="text-muted-foreground font-sans ml-12 max-w-lg px-4 sm:px-6 pb-3 text-sm">
+          Browse, search, and manage academic capstone project records in one place.
+        </p>
       </header>
 
       {/* Search + Actions */}
