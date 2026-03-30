@@ -150,19 +150,15 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Hero / Header */}
       <header className="border-b border-border/60 bg-card">
-        <div className="container max-w-6xl px-4 sm:px-6 py-6 sm:py-10">
-          <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
-            <GraduationCap className="w-7 h-7 sm:w-9 sm:h-9 text-accent shrink-0" />
-            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-foreground tracking-tight">
-              Capstone Catalog
-            </h1>
-          </div>
-          <p className="text-muted-foreground font-sans ml-9 sm:ml-12 max-w-lg text-sm sm:text-base">
-            Browse, search, and manage academic capstone project records in one place.
-          </p>
+        <div className="container max-w-6xl px-4 sm:px-6 py-3 flex items-center gap-2">
+          <GraduationCap className="w-6 h-6 text-accent shrink-0" />
+          <h1 className="font-serif text-lg sm:text-xl font-bold text-foreground tracking-tight">
+            Capstone Catalog
+          </h1>
+          <span className="hidden sm:inline text-muted-foreground text-sm ml-2">— Academic project records</span>
         </div>
       </header>
 
@@ -280,6 +276,13 @@ const Index = () => {
         open={detailOpen}
         onOpenChange={setDetailOpen}
       />
+
+      <footer className="border-t border-border/60 bg-card mt-auto">
+        <div className="container max-w-6xl px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
+          <span>© {new Date().getFullYear()} Capstone Catalog. All rights reserved.</span>
+          <span>{projects.length} project{projects.length !== 1 ? "s" : ""} in catalog</span>
+        </div>
+      </footer>
     </div>
   );
 };
