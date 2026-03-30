@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import { CapstoneProject, SortField, SortDirection } from "@/types/capstone";
 import { sampleProjects } from "@/data/sampleProjects";
 import AddProjectDialog from "@/components/AddProjectDialog";
