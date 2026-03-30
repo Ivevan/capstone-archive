@@ -1,4 +1,5 @@
 import { CapstoneProject } from "@/types/capstone";
+import { normalizeDriveLink } from "@/lib/driveLink";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +22,8 @@ interface ProjectDetailDialogProps {
 
 const ProjectDetailDialog = ({ project, open, onOpenChange }: ProjectDetailDialogProps) => {
   if (!project) return null;
+
+  const driveUrl = normalizeDriveLink(project.driveLink);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -68,14 +71,14 @@ const ProjectDetailDialog = ({ project, open, onOpenChange }: ProjectDetailDialo
             </div>
           </div>
 
-          {project.driveLink && (
+          {driveUrl && (
             <div className="flex items-start gap-2">
               <ExternalLink className="w-4 h-4 mt-0.5 text-accent shrink-0" />
               <div>
                 <span className="text-muted-foreground font-medium text-xs uppercase tracking-wide">Drive Folder</span>
                 <p className="text-sm">
                   <a
-                    href={project.driveLink}
+                    href={driveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-accent underline underline-offset-2 hover:text-accent/80"

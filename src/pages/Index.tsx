@@ -13,15 +13,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
+import { parseCSVLine, stripCsvBom, escapeCsvField } from "@/lib/csv";
+import { normalizeDriveLink } from "@/lib/driveLink";
 
 const monthNames = [
   "", "January", "February", "March", "April", "May", "June",
@@ -90,14 +85,14 @@ const Index = () => {
   const exportCSV = () => {
     const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator", "Drive Link"];
     const rows = filtered.map(p => [
-      `"${p.title}"`,
-      `"${p.authors.join("; ")}"`,
-      `"${p.adviser}"`,
-      `"${p.panelMembers.join("; ")}"`,
+      escapeCsvField(p.title),
+      escapeCsvField(p.authors.join("; ")),
+      escapeCsvField(p.adviser),
+      escapeCsvField(p.panelMembers.join("; ")),
       monthNames[p.month],
       p.year,
-      `"${p.thesisCoordinator}"`,
-      `"${p.driveLink || ""}"`,
+      escapeCsvField(p.thesisCoordinator),
+      escapeCsvField(p.driveLink || ""),
     ]);
     const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
@@ -115,31 +110,33 @@ const Index = () => {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (event) => {
-      const text = event.target?.result as string;
-      const lines = text.split("\n").filter(l => l.trim());
+      const raw = event.target?.result as string;
+      const text = stripCsvBom(raw);
+      const lines = text.split(/\r?\n/).filter((l) => l.trim());
       if (lines.length < 2) {
         toast.error("CSV file is empty or invalid.");
         return;
       }
       const newProjects: CapstoneProject[] = [];
       for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].match(/(".*?"|[^,]+)/g)?.map(c => c.replace(/^"|"$/g, "").trim()) || [];
+        const cols = parseCSVLine(lines[i]);
         if (cols.length < 7) continue;
         const monthIdx = monthNames.indexOf(cols[4]);
+        const driveRaw = cols.length > 7 ? cols[7] : "";
         newProjects.push({
           id: crypto.randomUUID(),
           title: cols[0],
-          authors: cols[1].split(";").map(a => a.trim()).filter(Boolean),
+          authors: cols[1].split(";").map((a) => a.trim()).filter(Boolean),
           adviser: cols[2],
-          panelMembers: cols[3].split(";").map(m => m.trim()).filter(Boolean),
+          panelMembers: cols[3].split(";").map((m) => m.trim()).filter(Boolean),
           month: monthIdx > 0 ? monthIdx : 1,
-          year: parseInt(cols[5]) || new Date().getFullYear(),
+          year: parseInt(String(cols[5]), 10) || new Date().getFullYear(),
           thesisCoordinator: cols[6],
-          driveLink: cols[7]?.trim() || undefined,
+          driveLink: normalizeDriveLink(driveRaw),
         });
       }
       if (newProjects.length > 0) {
-        setProjects(prev => [...newProjects, ...prev]);
+        setProjects((prev) => [...newProjects, ...prev]);
         toast.success(`Imported ${newProjects.length} project(s)!`);
       } else {
         toast.error("No valid projects found in CSV.");
@@ -230,7 +227,9 @@ const Index = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.map((project) => (
+                {filtered.map((project) => {
+                  const driveUrl = normalizeDriveLink(project.driveLink);
+                  return (
                   <TableRow
                     key={project.id}
                     className="cursor-pointer"
@@ -252,9 +251,9 @@ const Index = () => {
                       {monthNames[project.month].slice(0, 3)} {project.year}
                     </TableCell>
                     <TableCell className="text-center">
-                      {project.driveLink ? (
+                      {driveUrl ? (
                         <a
-                          href={project.driveLink}
+                          href={driveUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
@@ -268,7 +267,8 @@ const Index = () => {
                       )}
                     </TableCell>
                   </TableRow>
-                ))}
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
