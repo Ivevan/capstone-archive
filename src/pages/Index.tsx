@@ -162,11 +162,12 @@ const Index = () => {
           <h1 className="font-serif font-bold text-foreground tracking-tight text-3xl sm:text-2xl">
             Capstone Catalog
           </h1>
-          <span className="hidden sm:inline text-muted-foreground text-sm ml-2">​</span>
         </div>
-        <p className="text-muted-foreground font-sans ml-12 max-w-lg sm:px-6 pb-3 text-sm px-px">
-          Browse, search, and manage academic capstone project records in one place.​
-        </p>
+        <div className="container max-w-6xl px-4 sm:px-6 pb-3">
+          <p className="text-muted-foreground font-sans text-sm max-w-lg pl-[44px]">
+            Browse, search, and manage academic capstone project records in one place.
+          </p>
+        </div>
       </header>
 
       {/* Search + Actions */}
