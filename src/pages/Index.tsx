@@ -78,8 +78,12 @@ const Index = () => {
       return sortDir === "asc" ? cmp : -cmp;
     });
 
+    setCurrentPage(1);
     return list;
   }, [projects, search, sortField, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
+  const paginatedItems = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const handleAdd = (project: CapstoneProject) => {
     setProjects(prev => [project, ...prev]);
