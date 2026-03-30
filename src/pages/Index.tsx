@@ -150,7 +150,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Hero / Header */}
       <header className="border-b border-border/60 bg-card">
         <div className="container max-w-6xl px-4 sm:px-6 py-3 flex items-center gap-2">
