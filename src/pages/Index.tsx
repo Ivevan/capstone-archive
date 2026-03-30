@@ -236,7 +236,7 @@ const Index = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.map((project) => (
+                {paginatedItems.map((project) => (
                   <TableRow
                     key={project.id}
                     className="cursor-pointer"
