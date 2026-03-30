@@ -167,9 +167,9 @@ const Index = () => {
       </header>
 
       {/* Search + Actions */}
-      <div className="container max-w-6xl py-6">
-        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-          <div className="relative flex-1 max-w-md w-full">
+      <div className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6">
+        <div className="flex flex-col gap-3">
+          <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               value={search}
@@ -178,12 +178,12 @@ const Index = () => {
               className="pl-9"
             />
           </div>
-          <div className="flex gap-2 items-center">
-            <Button variant="outline" size="sm" onClick={exportCSV} className="gap-1.5">
-              <Download className="w-4 h-4" /> Export CSV
+          <div className="flex flex-wrap gap-2 items-center">
+            <Button variant="outline" size="sm" onClick={exportCSV} className="gap-1.5 text-xs sm:text-sm">
+              <Download className="w-4 h-4" /> Export
             </Button>
-            <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="gap-1.5">
-              <Upload className="w-4 h-4" /> Import CSV
+            <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="gap-1.5 text-xs sm:text-sm">
+              <Upload className="w-4 h-4" /> Import
             </Button>
             <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={importCSV} />
             <AddProjectDialog onAdd={handleAdd} />
