@@ -24,7 +24,7 @@ const ProjectDetailDialog = ({ project, open, onOpenChange }: ProjectDetailDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg w-[calc(100%-2rem)] sm:w-full mx-auto max-h-[85vh] overflow-y-auto rounded-lg">
         <DialogHeader>
           <DialogTitle className="font-serif text-xl leading-snug pr-6">
             {project.title}

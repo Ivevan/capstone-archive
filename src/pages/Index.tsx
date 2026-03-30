@@ -207,8 +207,8 @@ const Index = () => {
             <p className="text-sm mt-1">Try adjusting your search or add a new project</p>
           </div>
         ) : (
-          <div className="rounded-lg border border-border/60 bg-card overflow-hidden">
-            <Table>
+          <div className="rounded-lg border border-border/60 bg-card overflow-x-auto">
+            <Table className="min-w-[500px] sm:min-w-0">
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("title")}>
