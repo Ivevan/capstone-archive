@@ -283,7 +283,7 @@ const Index = () => {
       <footer className="border-t border-border/60 bg-card mt-auto">
         <div className="container max-w-6xl px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
           <span>© {new Date().getFullYear()} Capstone Catalog. All rights reserved.</span>
-          <span>Academic Project Records</span>
+          <span>Information Technology Capstone Records</span>
         </div>
       </footer>
     </div>
