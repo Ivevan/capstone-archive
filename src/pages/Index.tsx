@@ -276,7 +276,7 @@ const Index = () => {
                   </TableRow>
                 ))}
               </TableBody>
-            </Table>
+             </Table>
           </div>
           {totalPages > 1 && (
             <div className="flex items-center justify-between px-4 py-3 border-t border-border/60 bg-card rounded-b-lg">
@@ -316,7 +316,8 @@ const Index = () => {
               </div>
             </div>
           )}
-        )}
+          </>
+        )
       </div>
 
       <ProjectDetailDialog
