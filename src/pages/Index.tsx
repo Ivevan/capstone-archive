@@ -318,7 +318,7 @@ const Index = () => {
               </div>
             )}
           </>
-        )
+        )}
       </div>
 
       <ProjectDetailDialog
