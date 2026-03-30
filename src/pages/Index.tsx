@@ -155,12 +155,12 @@ const Index = () => {
       <header className="border-b border-border/60 bg-card">
         <div className="container max-w-6xl px-4 sm:px-6 py-3 flex items-center gap-2">
           <GraduationCap className="w-6 h-6 text-accent shrink-0" />
-          <h1 className="font-serif text-lg sm:text-xl font-bold text-foreground tracking-tight">
+          <h1 className="font-serif sm:text-xl font-bold text-foreground tracking-tight text-3xl">
             Capstone Catalog
           </h1>
           <span className="hidden sm:inline text-muted-foreground text-sm ml-2">— Academic project records</span>
         </div>
-        <p className="text-muted-foreground font-sans ml-12 max-w-lg px-4 sm:px-6 pb-3 text-sm">
+        <p className="text-muted-foreground font-sans ml-12 max-w-lg sm:px-6 pb-3 text-sm px-px">
           Browse, search, and manage academic capstone project records in one place.
         </p>
       </header>
