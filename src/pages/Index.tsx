@@ -28,6 +28,8 @@ const monthNames = [
   "July", "August", "September", "October", "November", "December",
 ];
 
+const ITEMS_PER_PAGE = 10;
+
 const Index = () => {
   const [projects, setProjects] = useState<CapstoneProject[]>(sampleProjects);
   const [search, setSearch] = useState("");
@@ -35,6 +37,7 @@ const Index = () => {
   const [sortDir, setSortDir] = useState<SortDirection>("desc");
   const [selectedProject, setSelectedProject] = useState<CapstoneProject | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const toggleSort = (field: SortField) => {
