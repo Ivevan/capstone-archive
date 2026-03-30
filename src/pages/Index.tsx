@@ -153,23 +153,23 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Hero / Header */}
       <header className="border-b border-border/60 bg-card">
-        <div className="container max-w-6xl py-10">
-          <div className="flex items-center gap-3 mb-2">
-            <GraduationCap className="w-9 h-9 text-accent" />
-            <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground tracking-tight">
+        <div className="container max-w-6xl px-4 sm:px-6 py-6 sm:py-10">
+          <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+            <GraduationCap className="w-7 h-7 sm:w-9 sm:h-9 text-accent shrink-0" />
+            <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-foreground tracking-tight">
               Capstone Catalog
             </h1>
           </div>
-          <p className="text-muted-foreground font-sans ml-12 max-w-lg">
+          <p className="text-muted-foreground font-sans ml-9 sm:ml-12 max-w-lg text-sm sm:text-base">
             Browse, search, and manage academic capstone project records in one place.
           </p>
         </div>
       </header>
 
       {/* Search + Actions */}
-      <div className="container max-w-6xl py-6">
-        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-          <div className="relative flex-1 max-w-md w-full">
+      <div className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6">
+        <div className="flex flex-col gap-3">
+          <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               value={search}
@@ -178,12 +178,12 @@ const Index = () => {
               className="pl-9"
             />
           </div>
-          <div className="flex gap-2 items-center">
-            <Button variant="outline" size="sm" onClick={exportCSV} className="gap-1.5">
-              <Download className="w-4 h-4" /> Export CSV
+          <div className="flex flex-wrap gap-2 items-center">
+            <Button variant="outline" size="sm" onClick={exportCSV} className="gap-1.5 text-xs sm:text-sm">
+              <Download className="w-4 h-4" /> Export
             </Button>
-            <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="gap-1.5">
-              <Upload className="w-4 h-4" /> Import CSV
+            <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="gap-1.5 text-xs sm:text-sm">
+              <Upload className="w-4 h-4" /> Import
             </Button>
             <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={importCSV} />
             <AddProjectDialog onAdd={handleAdd} />
@@ -199,7 +199,7 @@ const Index = () => {
       </div>
 
       {/* Table */}
-      <div className="container max-w-6xl pb-12">
+      <div className="container max-w-6xl px-4 sm:px-6 pb-12">
         {filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30" />
@@ -207,8 +207,8 @@ const Index = () => {
             <p className="text-sm mt-1">Try adjusting your search or add a new project</p>
           </div>
         ) : (
-          <div className="rounded-lg border border-border/60 bg-card overflow-hidden">
-            <Table>
+          <div className="rounded-lg border border-border/60 bg-card overflow-x-auto">
+            <Table className="min-w-[500px] sm:min-w-0">
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("title")}>

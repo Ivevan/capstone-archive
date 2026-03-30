@@ -107,7 +107,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
           Add Project
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-w-lg w-[calc(100%-2rem)] sm:w-full mx-auto max-h-[85vh] overflow-y-auto rounded-lg">
         <DialogHeader>
           <DialogTitle className="font-serif text-xl">New Capstone Project</DialogTitle>
         </DialogHeader>
