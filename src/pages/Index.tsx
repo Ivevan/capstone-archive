@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown, ExternalLink } from "lucide-react";
+import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { parseCSVLine, stripCsvBom, escapeCsvField } from "@/lib/csv";
 import { normalizeDriveLink } from "@/lib/driveLink";
@@ -23,6 +23,8 @@ const monthNames = [
   "July", "August", "September", "October", "November", "December",
 ];
 
+const ITEMS_PER_PAGE = 10;
+
 const Index = () => {
   const [projects, setProjects] = useState<CapstoneProject[]>(sampleProjects);
   const [search, setSearch] = useState("");
@@ -30,6 +32,7 @@ const Index = () => {
   const [sortDir, setSortDir] = useState<SortDirection>("desc");
   const [selectedProject, setSelectedProject] = useState<CapstoneProject | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const toggleSort = (field: SortField) => {
@@ -70,8 +73,12 @@ const Index = () => {
       return sortDir === "asc" ? cmp : -cmp;
     });
 
+    setCurrentPage(1);
     return list;
   }, [projects, search, sortField, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
+  const paginatedItems = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const handleAdd = (project: CapstoneProject) => {
     setProjects(prev => [project, ...prev]);
@@ -147,26 +154,25 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Hero / Header */}
       <header className="border-b border-border/60 bg-card">
-        <div className="container max-w-6xl py-10">
-          <div className="flex items-center gap-3 mb-2">
-            <GraduationCap className="w-9 h-9 text-accent" />
-            <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground tracking-tight">
-              Capstone Catalog
-            </h1>
-          </div>
-          <p className="text-muted-foreground font-sans ml-12 max-w-lg">
-            Browse, search, and manage academic capstone project records in one place.
-          </p>
+        <div className="container max-w-6xl px-4 sm:px-6 py-3 flex items-center gap-2">
+          <GraduationCap className="text-accent shrink-0 h-[36px] w-[36px]" />
+          <h1 className="font-serif font-bold text-foreground tracking-tight text-3xl sm:text-2xl">
+            Capstone Catalog
+          </h1>
+          <span className="hidden sm:inline text-muted-foreground text-sm ml-2">​</span>
         </div>
+        <p className="text-muted-foreground font-sans ml-12 max-w-lg sm:px-6 pb-3 text-sm px-px">
+          Browse, search, and manage academic capstone project records in one place.​
+        </p>
       </header>
 
       {/* Search + Actions */}
-      <div className="container max-w-6xl py-6">
-        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-          <div className="relative flex-1 max-w-md w-full">
+      <div className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6">
+        <div className="flex flex-col gap-3">
+          <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               value={search}
@@ -175,12 +181,12 @@ const Index = () => {
               className="pl-9"
             />
           </div>
-          <div className="flex gap-2 items-center">
-            <Button variant="outline" size="sm" onClick={exportCSV} className="gap-1.5">
-              <Download className="w-4 h-4" /> Export CSV
+          <div className="flex flex-wrap gap-2 items-center">
+            <Button variant="outline" size="sm" onClick={exportCSV} className="gap-1.5 text-xs sm:text-sm">
+              <Download className="w-4 h-4" /> Export
             </Button>
-            <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="gap-1.5">
-              <Upload className="w-4 h-4" /> Import CSV
+            <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="gap-1.5 text-xs sm:text-sm">
+              <Upload className="w-4 h-4" /> Import
             </Button>
             <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={importCSV} />
             <AddProjectDialog onAdd={handleAdd} />
@@ -196,7 +202,7 @@ const Index = () => {
       </div>
 
       {/* Table */}
-      <div className="container max-w-6xl pb-12">
+      <div className="container max-w-6xl px-4 sm:px-6 pb-12">
         {filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30" />
@@ -204,74 +210,114 @@ const Index = () => {
             <p className="text-sm mt-1">Try adjusting your search or add a new project</p>
           </div>
         ) : (
-          <div className="rounded-lg border border-border/60 bg-card overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("title")}>
-                    <span className="flex items-center">Title <SortIcon field="title" /></span>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("author")}>
-                    <span className="flex items-center">Authors <SortIcon field="author" /></span>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none hidden md:table-cell" onClick={() => toggleSort("adviser")}>
-                    <span className="flex items-center">Adviser <SortIcon field="adviser" /></span>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none hidden lg:table-cell" onClick={() => toggleSort("coordinator")}>
-                    <span className="flex items-center">Coordinator <SortIcon field="coordinator" /></span>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none text-right" onClick={() => toggleSort("date")}>
-                    <span className="flex items-center justify-end">Date <SortIcon field="date" /></span>
-                  </TableHead>
-                  <TableHead className="text-center w-[60px]">Drive</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((project) => {
-                  const driveUrl = normalizeDriveLink(project.driveLink);
-                  return (
-                  <TableRow
-                    key={project.id}
-                    className="cursor-pointer"
-                    onClick={() => handleRowClick(project)}
-                  >
-                    <TableCell className="font-medium max-w-[280px]">
-                      <span className="line-clamp-2">{project.title}</span>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground max-w-[200px]">
-                      <span className="line-clamp-1">{project.authors.join(", ")}</span>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground hidden md:table-cell">
-                      {project.adviser}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground hidden lg:table-cell">
-                      {project.thesisCoordinator}
-                    </TableCell>
-                    <TableCell className="text-right text-muted-foreground whitespace-nowrap">
-                      {monthNames[project.month].slice(0, 3)} {project.year}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {driveUrl ? (
-                        <a
-                          href={driveUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="inline-flex items-center justify-center w-8 h-8 rounded-md hover:bg-accent/10 text-accent transition-colors"
-                          title="Open Drive folder (Abstract, Approval Sheet, Book Cover)"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                      ) : (
-                        <span className="text-muted-foreground/30">—</span>
-                      )}
-                    </TableCell>
+          <>
+            <div className="rounded-lg border border-border/60 bg-card overflow-x-auto">
+              <Table className="min-w-[500px] sm:min-w-0">
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("title")}>
+                      <span className="flex items-center">Title <SortIcon field="title" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("author")}>
+                      <span className="flex items-center">Authors <SortIcon field="author" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none hidden md:table-cell" onClick={() => toggleSort("adviser")}>
+                      <span className="flex items-center">Adviser <SortIcon field="adviser" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none hidden lg:table-cell" onClick={() => toggleSort("coordinator")}>
+                      <span className="flex items-center">Coordinator <SortIcon field="coordinator" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none text-right" onClick={() => toggleSort("date")}>
+                      <span className="flex items-center justify-end">Date <SortIcon field="date" /></span>
+                    </TableHead>
+                    <TableHead className="text-center w-[60px]">Drive</TableHead>
                   </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {paginatedItems.map((project) => {
+                    const driveUrl = normalizeDriveLink(project.driveLink);
+                    return (
+                    <TableRow
+                      key={project.id}
+                      className="cursor-pointer"
+                      onClick={() => handleRowClick(project)}
+                    >
+                      <TableCell className="font-medium max-w-[280px]">
+                        <span className="line-clamp-2">{project.title}</span>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground max-w-[200px]">
+                        <span className="line-clamp-1">{project.authors.join(", ")}</span>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground hidden md:table-cell">
+                        {project.adviser}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground hidden lg:table-cell">
+                        {project.thesisCoordinator}
+                      </TableCell>
+                      <TableCell className="text-right text-muted-foreground whitespace-nowrap">
+                        {monthNames[project.month].slice(0, 3)} {project.year}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {driveUrl ? (
+                          <a
+                            href={driveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-md hover:bg-accent/10 text-accent transition-colors"
+                            title="Open Drive folder (Abstract, Approval Sheet, Book Cover)"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                        ) : (
+                          <span className="text-muted-foreground/30">—</span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between px-4 py-3 mt-2 text-sm">
+                <span className="text-xs text-muted-foreground">
+                  Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} of {filtered.length}
+                </span>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(p => p - 1)}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <Button
+                      key={page}
+                      variant={page === currentPage ? "default" : "ghost"}
+                      size="icon"
+                      className="h-8 w-8 text-xs"
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(p => p + 1)}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -280,6 +326,13 @@ const Index = () => {
         open={detailOpen}
         onOpenChange={setDetailOpen}
       />
+
+      <footer className="border-t border-border/60 bg-card mt-auto">
+        <div className="container max-w-6xl px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
+          <span>© {new Date().getFullYear()} Capstone Catalog. All rights reserved.</span>
+          <span>Information Technology Capstone Records</span>
+        </div>
+      </footer>
     </div>
   );
 };
