@@ -213,109 +213,110 @@ const Index = () => {
             <p className="text-sm mt-1">Try adjusting your search or add a new project</p>
           </div>
         ) : (
-          <div className="rounded-lg border border-border/60 bg-card overflow-x-auto">
-            <Table className="min-w-[500px] sm:min-w-0">
-              <TableHeader>
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("title")}>
-                    <span className="flex items-center">Title <SortIcon field="title" /></span>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("author")}>
-                    <span className="flex items-center">Authors <SortIcon field="author" /></span>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none hidden md:table-cell" onClick={() => toggleSort("adviser")}>
-                    <span className="flex items-center">Adviser <SortIcon field="adviser" /></span>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none hidden lg:table-cell" onClick={() => toggleSort("coordinator")}>
-                    <span className="flex items-center">Coordinator <SortIcon field="coordinator" /></span>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none text-right" onClick={() => toggleSort("date")}>
-                    <span className="flex items-center justify-end">Date <SortIcon field="date" /></span>
-                  </TableHead>
-                  <TableHead className="text-center w-[60px]">Drive</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {paginatedItems.map((project) => (
-                  <TableRow
-                    key={project.id}
-                    className="cursor-pointer"
-                    onClick={() => handleRowClick(project)}
-                  >
-                    <TableCell className="font-medium max-w-[280px]">
-                      <span className="line-clamp-2">{project.title}</span>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground max-w-[200px]">
-                      <span className="line-clamp-1">{project.authors.join(", ")}</span>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground hidden md:table-cell">
-                      {project.adviser}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground hidden lg:table-cell">
-                      {project.thesisCoordinator}
-                    </TableCell>
-                    <TableCell className="text-right text-muted-foreground whitespace-nowrap">
-                      {monthNames[project.month].slice(0, 3)} {project.year}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {project.driveLink ? (
-                        <a
-                          href={project.driveLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="inline-flex items-center justify-center w-8 h-8 rounded-md hover:bg-accent/10 text-accent transition-colors"
-                          title="Open Drive folder (Abstract, Approval Sheet, Book Cover)"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                      ) : (
-                        <span className="text-muted-foreground/30">—</span>
-                      )}
-                    </TableCell>
+          <>
+            <div className="rounded-lg border border-border/60 bg-card overflow-x-auto">
+              <Table className="min-w-[500px] sm:min-w-0">
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("title")}>
+                      <span className="flex items-center">Title <SortIcon field="title" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("author")}>
+                      <span className="flex items-center">Authors <SortIcon field="author" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none hidden md:table-cell" onClick={() => toggleSort("adviser")}>
+                      <span className="flex items-center">Adviser <SortIcon field="adviser" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none hidden lg:table-cell" onClick={() => toggleSort("coordinator")}>
+                      <span className="flex items-center">Coordinator <SortIcon field="coordinator" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none text-right" onClick={() => toggleSort("date")}>
+                      <span className="flex items-center justify-end">Date <SortIcon field="date" /></span>
+                    </TableHead>
+                    <TableHead className="text-center w-[60px]">Drive</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-             </Table>
-          </div>
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-border/60 bg-card rounded-b-lg">
-              <span className="text-xs text-muted-foreground">
-                Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} of {filtered.length}
-              </span>
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(p => p - 1)}
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                  <Button
-                    key={page}
-                    variant={page === currentPage ? "default" : "ghost"}
-                    size="icon"
-                    className="h-8 w-8 text-xs"
-                    onClick={() => setCurrentPage(page)}
-                  >
-                    {page}
-                  </Button>
-                ))}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage(p => p + 1)}
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </div>
+                </TableHeader>
+                <TableBody>
+                  {paginatedItems.map((project) => (
+                    <TableRow
+                      key={project.id}
+                      className="cursor-pointer"
+                      onClick={() => handleRowClick(project)}
+                    >
+                      <TableCell className="font-medium max-w-[280px]">
+                        <span className="line-clamp-2">{project.title}</span>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground max-w-[200px]">
+                        <span className="line-clamp-1">{project.authors.join(", ")}</span>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground hidden md:table-cell">
+                        {project.adviser}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground hidden lg:table-cell">
+                        {project.thesisCoordinator}
+                      </TableCell>
+                      <TableCell className="text-right text-muted-foreground whitespace-nowrap">
+                        {monthNames[project.month].slice(0, 3)} {project.year}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {project.driveLink ? (
+                          <a
+                            href={project.driveLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-md hover:bg-accent/10 text-accent transition-colors"
+                            title="Open Drive folder (Abstract, Approval Sheet, Book Cover)"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                        ) : (
+                          <span className="text-muted-foreground/30">—</span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
-          )}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between px-4 py-3 mt-2 text-sm">
+                <span className="text-xs text-muted-foreground">
+                  Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} of {filtered.length}
+                </span>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(p => p - 1)}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <Button
+                      key={page}
+                      variant={page === currentPage ? "default" : "ghost"}
+                      size="icon"
+                      className="h-8 w-8 text-xs"
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(p => p + 1)}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </>
         )
       </div>
