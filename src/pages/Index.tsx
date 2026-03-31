@@ -150,14 +150,17 @@ const Index = () => {
           const unique = newProjects.filter(
             (p) => !existingKeys.has(`${p.title.toLowerCase()}|${p.authors.map(a => a.toLowerCase()).sort().join(";")}`)
           );
-          if (unique.length < newProjects.length) {
-            const skipped = newProjects.length - unique.length;
+          const skipped = newProjects.length - unique.length;
+          if (skipped > 0) {
             toast.info(`Skipped ${skipped} duplicate(s).`);
           }
-          if (unique.length === 0) return prev;
+          if (unique.length === 0) {
+            toast.info("All projects already exist. No new records imported.");
+            return prev;
+          }
+          toast.success(`Imported ${unique.length} new project(s)!`);
           return [...unique, ...prev];
         });
-        toast.success(`Imported ${newProjects.length} project(s)!`);
       } else {
         toast.error("No valid projects found in CSV.");
       }
