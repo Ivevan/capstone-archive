@@ -1,3 +1,3 @@
-# Welcome to your Lovable project
+# Capstone-Catalog
 
-TODO: Document your project here
+Capstone Catalog is a standalone web-based module for encoding, viewing, and organizing capstone project records.
