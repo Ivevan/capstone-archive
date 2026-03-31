@@ -208,14 +208,30 @@ const Index = () => {
       {/* Search + Actions */}
       <div className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6">
         <div className="flex flex-col gap-3">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search by title, author, adviser..."
-              className="pl-9"
-            />
+          <div className="flex gap-2 w-full">
+            <Select value={searchCategory} onValueChange={setSearchCategory}>
+              <SelectTrigger className="w-[140px] shrink-0">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Fields</SelectItem>
+                <SelectItem value="title">Title</SelectItem>
+                <SelectItem value="author">Author</SelectItem>
+                <SelectItem value="adviser">Adviser</SelectItem>
+                <SelectItem value="coordinator">Coordinator</SelectItem>
+                <SelectItem value="panel">Panel Member</SelectItem>
+              </SelectContent>
+            </Select>
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search projects..."
+                className="pl-9"
+              />
+            </div>
+          </div>
           </div>
           <div className="flex flex-wrap gap-2 items-center">
             <Button variant="outline" size="sm" onClick={exportCSV} className="gap-1.5 text-xs sm:text-sm">
