@@ -143,7 +143,20 @@ const Index = () => {
         });
       }
       if (newProjects.length > 0) {
-        setProjects((prev) => [...newProjects, ...prev]);
+        setProjects((prev) => {
+          const existingKeys = new Set(
+            prev.map((p) => `${p.title.toLowerCase()}|${p.authors.map(a => a.toLowerCase()).sort().join(";")}`)
+          );
+          const unique = newProjects.filter(
+            (p) => !existingKeys.has(`${p.title.toLowerCase()}|${p.authors.map(a => a.toLowerCase()).sort().join(";")}`)
+          );
+          if (unique.length < newProjects.length) {
+            const skipped = newProjects.length - unique.length;
+            toast.info(`Skipped ${skipped} duplicate(s).`);
+          }
+          if (unique.length === 0) return prev;
+          return [...unique, ...prev];
+        });
         toast.success(`Imported ${newProjects.length} project(s)!`);
       } else {
         toast.error("No valid projects found in CSV.");
