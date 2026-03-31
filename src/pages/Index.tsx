@@ -216,6 +216,7 @@ const Index = () => {
               <Table className="min-w-[500px] sm:min-w-0">
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-[50px] text-center">#</TableHead>
                     <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("title")}>
                       <span className="flex items-center">Title <SortIcon field="title" /></span>
                     </TableHead>
@@ -235,14 +236,16 @@ const Index = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {paginatedItems.map((project) => {
+                  {paginatedItems.map((project, index) => {
                     const driveUrl = normalizeDriveLink(project.driveLink);
+                    const rowNumber = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
                     return (
                     <TableRow
                       key={project.id}
                       className="cursor-pointer"
                       onClick={() => handleRowClick(project)}
                     >
+                      <TableCell className="text-center text-muted-foreground">{rowNumber}</TableCell>
                       <TableCell className="font-medium max-w-[280px]">
                         <span className="line-clamp-2">{project.title}</span>
                       </TableCell>
