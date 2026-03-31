@@ -4,6 +4,13 @@ import { sampleProjects } from "@/data/sampleProjects";
 import AddProjectDialog from "@/components/AddProjectDialog";
 import ProjectDetailDialog from "@/components/ProjectDetailDialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -28,6 +35,7 @@ const ITEMS_PER_PAGE = 10;
 const Index = () => {
   const [projects, setProjects] = useState<CapstoneProject[]>(sampleProjects);
   const [search, setSearch] = useState("");
+  const [searchCategory, setSearchCategory] = useState<string>("all");
   const [sortField, setSortField] = useState<SortField>("date");
   const [sortDir, setSortDir] = useState<SortDirection>("desc");
   const [selectedProject, setSelectedProject] = useState<CapstoneProject | null>(null);
@@ -53,13 +61,24 @@ const Index = () => {
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
-    let list = projects.filter(p =>
-      p.title.toLowerCase().includes(q) ||
-      p.authors.some(a => a.toLowerCase().includes(q)) ||
-      p.adviser.toLowerCase().includes(q) ||
-      p.thesisCoordinator.toLowerCase().includes(q) ||
-      p.panelMembers.some(m => m.toLowerCase().includes(q))
-    );
+    let list = projects.filter(p => {
+      if (!q) return true;
+      switch (searchCategory) {
+        case "title": return p.title.toLowerCase().includes(q);
+        case "author": return p.authors.some(a => a.toLowerCase().includes(q));
+        case "adviser": return p.adviser.toLowerCase().includes(q);
+        case "coordinator": return p.thesisCoordinator.toLowerCase().includes(q);
+        case "panel": return p.panelMembers.some(m => m.toLowerCase().includes(q));
+        default:
+          return (
+            p.title.toLowerCase().includes(q) ||
+            p.authors.some(a => a.toLowerCase().includes(q)) ||
+            p.adviser.toLowerCase().includes(q) ||
+            p.thesisCoordinator.toLowerCase().includes(q) ||
+            p.panelMembers.some(m => m.toLowerCase().includes(q))
+          );
+      }
+    });
 
     list.sort((a, b) => {
       let cmp = 0;
@@ -75,7 +94,7 @@ const Index = () => {
 
     setCurrentPage(1);
     return list;
-  }, [projects, search, sortField, sortDir]);
+  }, [projects, search, searchCategory, sortField, sortDir]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const paginatedItems = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -189,14 +208,29 @@ const Index = () => {
       {/* Search + Actions */}
       <div className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6">
         <div className="flex flex-col gap-3">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search by title, author, adviser..."
-              className="pl-9"
-            />
+          <div className="flex gap-2 w-full">
+            <Select value={searchCategory} onValueChange={setSearchCategory}>
+              <SelectTrigger className="w-[140px] shrink-0">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Fields</SelectItem>
+                <SelectItem value="title">Title</SelectItem>
+                <SelectItem value="author">Author</SelectItem>
+                <SelectItem value="adviser">Adviser</SelectItem>
+                <SelectItem value="coordinator">Coordinator</SelectItem>
+                <SelectItem value="panel">Panel Member</SelectItem>
+              </SelectContent>
+            </Select>
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search projects..."
+                className="pl-9"
+              />
+            </div>
           </div>
           <div className="flex flex-wrap gap-2 items-center">
             <Button variant="outline" size="sm" onClick={exportCSV} className="gap-1.5 text-xs sm:text-sm">
