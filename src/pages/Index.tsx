@@ -35,6 +35,7 @@ const ITEMS_PER_PAGE = 10;
 const Index = () => {
   const [projects, setProjects] = useState<CapstoneProject[]>(sampleProjects);
   const [search, setSearch] = useState("");
+  const [searchCategory, setSearchCategory] = useState<string>("all");
   const [sortField, setSortField] = useState<SortField>("date");
   const [sortDir, setSortDir] = useState<SortDirection>("desc");
   const [selectedProject, setSelectedProject] = useState<CapstoneProject | null>(null);
