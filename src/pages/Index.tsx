@@ -61,13 +61,24 @@ const Index = () => {
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
-    let list = projects.filter(p =>
-      p.title.toLowerCase().includes(q) ||
-      p.authors.some(a => a.toLowerCase().includes(q)) ||
-      p.adviser.toLowerCase().includes(q) ||
-      p.thesisCoordinator.toLowerCase().includes(q) ||
-      p.panelMembers.some(m => m.toLowerCase().includes(q))
-    );
+    let list = projects.filter(p => {
+      if (!q) return true;
+      switch (searchCategory) {
+        case "title": return p.title.toLowerCase().includes(q);
+        case "author": return p.authors.some(a => a.toLowerCase().includes(q));
+        case "adviser": return p.adviser.toLowerCase().includes(q);
+        case "coordinator": return p.thesisCoordinator.toLowerCase().includes(q);
+        case "panel": return p.panelMembers.some(m => m.toLowerCase().includes(q));
+        default:
+          return (
+            p.title.toLowerCase().includes(q) ||
+            p.authors.some(a => a.toLowerCase().includes(q)) ||
+            p.adviser.toLowerCase().includes(q) ||
+            p.thesisCoordinator.toLowerCase().includes(q) ||
+            p.panelMembers.some(m => m.toLowerCase().includes(q))
+          );
+      }
+    });
 
     list.sort((a, b) => {
       let cmp = 0;
