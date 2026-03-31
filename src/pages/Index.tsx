@@ -232,7 +232,6 @@ const Index = () => {
               />
             </div>
           </div>
-          </div>
           <div className="flex flex-wrap gap-2 items-center">
             <Button variant="outline" size="sm" onClick={exportCSV} className="gap-1.5 text-xs sm:text-sm">
               <Download className="w-4 h-4" /> Export
