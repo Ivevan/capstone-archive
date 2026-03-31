@@ -216,6 +216,7 @@ const Index = () => {
               <Table className="min-w-[500px] sm:min-w-0">
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-[50px] text-center">#</TableHead>
                     <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("title")}>
                       <span className="flex items-center">Title <SortIcon field="title" /></span>
                     </TableHead>
