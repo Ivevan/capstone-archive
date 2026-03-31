@@ -246,10 +246,6 @@ const Index = () => {
                       onClick={() => handleRowClick(project)}
                     >
                       <TableCell className="text-center text-muted-foreground">{rowNumber}</TableCell>
-                      key={project.id}
-                      className="cursor-pointer"
-                      onClick={() => handleRowClick(project)}
-                    >
                       <TableCell className="font-medium max-w-[280px]">
                         <span className="line-clamp-2">{project.title}</span>
                       </TableCell>
