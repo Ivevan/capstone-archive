@@ -197,7 +197,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
           </div>
 
           <div>
-            <Label>Google Drive Link <span className="text-muted-foreground font-normal">(Abstract, Approval Sheet, Book Cover)</span></Label>
+            <Label>Google Drive Link <span className="text-muted-foreground font-normal">(Abstract)</span></Label>
             <Input value={driveLink} onChange={e => setDriveLink(e.target.value)} placeholder="https://drive.google.com/drive/folders/..." />
           </div>
 

@@ -83,7 +83,7 @@ const ProjectDetailDialog = ({ project, open, onOpenChange }: ProjectDetailDialo
                     rel="noopener noreferrer"
                     className="text-accent underline underline-offset-2 hover:text-accent/80"
                   >
-                    Abstract, Approval Sheet, Book Cover
+                    Abstract
                   </a>
                 </p>
               </div>
