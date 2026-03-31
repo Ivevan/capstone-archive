@@ -236,10 +236,16 @@ const Index = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {paginatedItems.map((project) => {
+                  {paginatedItems.map((project, index) => {
                     const driveUrl = normalizeDriveLink(project.driveLink);
+                    const rowNumber = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
                     return (
                     <TableRow
+                      key={project.id}
+                      className="cursor-pointer"
+                      onClick={() => handleRowClick(project)}
+                    >
+                      <TableCell className="text-center text-muted-foreground">{rowNumber}</TableCell>
                       key={project.id}
                       className="cursor-pointer"
                       onClick={() => handleRowClick(project)}
