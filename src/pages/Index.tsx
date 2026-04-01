@@ -111,7 +111,7 @@ const Index = () => {
   };
 
   const exportCSV = () => {
-    const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator", "Drive Link"];
+    const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator", "Keywords", "Drive Link"];
     const rows = filtered.map(p => [
       escapeCsvField(p.title),
       escapeCsvField(p.authors.join("; ")),
@@ -120,6 +120,7 @@ const Index = () => {
       monthNames[p.month],
       p.year,
       escapeCsvField(p.thesisCoordinator),
+      escapeCsvField((p.keywords || []).join("; ")),
       escapeCsvField(p.driveLink || ""),
     ]);
     const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
