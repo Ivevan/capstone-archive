@@ -38,6 +38,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
   const [authors, setAuthors] = useState<string[]>([""]);
   const [panelMembers, setPanelMembers] = useState<string[]>([""]);
   const [adviser, setAdviser] = useState("");
+  const [keywords, setKeywords] = useState("");
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [coordinator, setCoordinator] = useState("");
@@ -69,7 +70,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
 
   const reset = () => {
     setTitle(""); setAuthors([""]); setPanelMembers([""]); setAdviser("");
-    setMonth(""); setYear(""); setCoordinator(""); setDriveLink("");
+    setKeywords(""); setMonth(""); setYear(""); setCoordinator(""); setDriveLink("");
   };
 
   const handleSubmit = () => {
@@ -81,6 +82,8 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
       return;
     }
 
+    const parsedKeywords = keywords.split(",").map(k => k.trim()).filter(Boolean);
+
     const project: CapstoneProject = {
       id: crypto.randomUUID(),
       title: title.trim(),
@@ -90,6 +93,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
       year: parseInt(year),
       month: parseInt(month),
       thesisCoordinator: coordinator.trim(),
+      keywords: parsedKeywords.length > 0 ? parsedKeywords : undefined,
       driveLink: driveLink.trim() || undefined,
     };
 
@@ -143,6 +147,11 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
           <div>
             <Label>Adviser *</Label>
             <Input value={adviser} onChange={e => setAdviser(e.target.value)} placeholder="Adviser name" />
+          </div>
+
+          <div>
+            <Label>Keywords <span className="text-muted-foreground font-normal">(comma-separated)</span></Label>
+            <Input value={keywords} onChange={e => setKeywords(e.target.value)} placeholder="e.g. IoT, Machine Learning, Mobile App" />
           </div>
 
           <div>

@@ -10,6 +10,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2024,
     month: 3,
     thesisCoordinator: "Dr. Patricia Lim",
+    keywords: ["IoT", "Navigation", "Smart Campus"],
     driveLink: "https://drive.google.com/uc?export=view&id=12QwxrEoIcOVgZqXn2CpPS2Lhc7mNxWzK",
   },
   {
@@ -21,6 +22,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2024,
     month: 6,
     thesisCoordinator: "Dr. Patricia Lim",
+    keywords: ["AI", "Machine Learning", "Student Performance"],
     driveLink: "https://drive.google.com/drive/folders/example2",
   },
   {
@@ -32,6 +34,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2023,
     month: 11,
     thesisCoordinator: "Dr. Ramon Estrada",
+    keywords: ["Blockchain", "Document Verification", "Security"],
     driveLink: "https://drive.google.com/drive/folders/example3",
   },
   {
@@ -43,6 +46,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2024,
     month: 1,
     thesisCoordinator: "Dr. Ramon Estrada",
+    keywords: ["Mobile App", "Mental Health", "Healthcare"],
   },
   {
     id: "5",
@@ -53,6 +57,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2023,
     month: 8,
     thesisCoordinator: "Dr. Patricia Lim",
+    keywords: ["Library", "Recommendation Engine", "Automation"],
     driveLink: "https://drive.google.com/drive/folders/example5",
   },
   {
@@ -64,5 +69,6 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2024,
     month: 5,
     thesisCoordinator: "Dr. Patricia Lim",
+    keywords: ["Flood Monitoring", "IoT", "Early Warning"],
   },
 ];

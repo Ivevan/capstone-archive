@@ -69,13 +69,15 @@ const Index = () => {
         case "adviser": return p.adviser.toLowerCase().includes(q);
         case "coordinator": return p.thesisCoordinator.toLowerCase().includes(q);
         case "panel": return p.panelMembers.some(m => m.toLowerCase().includes(q));
+        case "keyword": return (p.keywords || []).some(k => k.toLowerCase().includes(q));
         default:
           return (
             p.title.toLowerCase().includes(q) ||
             p.authors.some(a => a.toLowerCase().includes(q)) ||
             p.adviser.toLowerCase().includes(q) ||
             p.thesisCoordinator.toLowerCase().includes(q) ||
-            p.panelMembers.some(m => m.toLowerCase().includes(q))
+            p.panelMembers.some(m => m.toLowerCase().includes(q)) ||
+            (p.keywords || []).some(k => k.toLowerCase().includes(q))
           );
       }
     });
@@ -109,7 +111,7 @@ const Index = () => {
   };
 
   const exportCSV = () => {
-    const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator", "Drive Link"];
+    const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator", "Keywords", "Drive Link"];
     const rows = filtered.map(p => [
       escapeCsvField(p.title),
       escapeCsvField(p.authors.join("; ")),
@@ -118,6 +120,7 @@ const Index = () => {
       monthNames[p.month],
       p.year,
       escapeCsvField(p.thesisCoordinator),
+      escapeCsvField((p.keywords || []).join("; ")),
       escapeCsvField(p.driveLink || ""),
     ]);
     const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
@@ -148,7 +151,9 @@ const Index = () => {
         const cols = parseCSVLine(lines[i]);
         if (cols.length < 7) continue;
         const monthIdx = monthNames.indexOf(cols[4]);
-        const driveRaw = cols.length > 7 ? cols[7] : "";
+        const keywordsRaw = cols.length > 7 ? cols[7] : "";
+        const driveRaw = cols.length > 8 ? cols[8] : "";
+        const parsedKeywords = keywordsRaw.split(";").map(k => k.trim()).filter(Boolean);
         newProjects.push({
           id: crypto.randomUUID(),
           title: cols[0],
@@ -158,6 +163,7 @@ const Index = () => {
           month: monthIdx > 0 ? monthIdx : 1,
           year: parseInt(String(cols[5]), 10) || new Date().getFullYear(),
           thesisCoordinator: cols[6],
+          keywords: parsedKeywords.length > 0 ? parsedKeywords : undefined,
           driveLink: normalizeDriveLink(driveRaw),
         });
       }
@@ -220,6 +226,7 @@ const Index = () => {
                 <SelectItem value="adviser">Adviser</SelectItem>
                 <SelectItem value="coordinator">Coordinator</SelectItem>
                 <SelectItem value="panel">Panel Member</SelectItem>
+                <SelectItem value="keyword">Keyword</SelectItem>
               </SelectContent>
             </Select>
             <div className="relative flex-1">
