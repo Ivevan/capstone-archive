@@ -34,6 +34,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2023,
     month: 11,
     thesisCoordinator: "Dr. Ramon Estrada",
+    keywords: ["Blockchain", "Document Verification", "Security"],
     driveLink: "https://drive.google.com/drive/folders/example3",
   },
   {
