@@ -69,5 +69,6 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2024,
     month: 5,
     thesisCoordinator: "Dr. Patricia Lim",
+    keywords: ["Flood Monitoring", "IoT", "Early Warning"],
   },
 ];

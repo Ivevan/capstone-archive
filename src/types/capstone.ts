@@ -7,6 +7,7 @@ export interface CapstoneProject {
   year: number;
   month: number;
   thesisCoordinator: string;
+  keywords?: string[];
   driveLink?: string; // Google Drive folder with Abstract, Approval Sheet, Book Cover
 }
 
