@@ -39,6 +39,20 @@ const ProjectDetailDialog = ({ project, open, onOpenChange }: ProjectDetailDialo
             {monthNames[project.month]} {project.year}
           </Badge>
 
+          {project.keywords && project.keywords.length > 0 && (
+            <div className="flex items-start gap-2">
+              <Tag className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+              <div>
+                <span className="text-muted-foreground font-medium text-xs uppercase tracking-wide">Keywords</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {project.keywords.map((kw, i) => (
+                    <Badge key={i} variant="outline" className="text-xs">{kw}</Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-start gap-2">
             <Users className="w-4 h-4 mt-0.5 text-accent shrink-0" />
             <div>

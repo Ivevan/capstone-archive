@@ -226,6 +226,7 @@ const Index = () => {
                 <SelectItem value="adviser">Adviser</SelectItem>
                 <SelectItem value="coordinator">Coordinator</SelectItem>
                 <SelectItem value="panel">Panel Member</SelectItem>
+                <SelectItem value="keyword">Keyword</SelectItem>
               </SelectContent>
             </Select>
             <div className="relative flex-1">

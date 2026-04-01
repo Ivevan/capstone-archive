@@ -150,6 +150,11 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
           </div>
 
           <div>
+            <Label>Keywords <span className="text-muted-foreground font-normal">(comma-separated)</span></Label>
+            <Input value={keywords} onChange={e => setKeywords(e.target.value)} placeholder="e.g. IoT, Machine Learning, Mobile App" />
+          </div>
+
+          <div>
             <div className="flex items-center justify-between mb-1">
               <Label>Panel Members</Label>
               <Button type="button" variant="ghost" size="sm" onClick={addPanel} className="h-7 text-xs gap-1">
