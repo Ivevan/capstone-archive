@@ -10,6 +10,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2024,
     month: 3,
     thesisCoordinator: "Dr. Patricia Lim",
+    keywords: ["IoT", "Navigation", "Smart Campus"],
     driveLink: "https://drive.google.com/uc?export=view&id=12QwxrEoIcOVgZqXn2CpPS2Lhc7mNxWzK",
   },
   {
