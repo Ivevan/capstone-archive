@@ -70,7 +70,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
 
   const reset = () => {
     setTitle(""); setAuthors([""]); setPanelMembers([""]); setAdviser("");
-    setMonth(""); setYear(""); setCoordinator(""); setDriveLink("");
+    setKeywords(""); setMonth(""); setYear(""); setCoordinator(""); setDriveLink("");
   };
 
   const handleSubmit = () => {
