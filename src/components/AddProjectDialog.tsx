@@ -38,6 +38,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
   const [authors, setAuthors] = useState<string[]>([""]);
   const [panelMembers, setPanelMembers] = useState<string[]>([""]);
   const [adviser, setAdviser] = useState("");
+  const [keywords, setKeywords] = useState("");
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [coordinator, setCoordinator] = useState("");
