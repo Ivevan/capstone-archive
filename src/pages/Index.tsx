@@ -151,7 +151,9 @@ const Index = () => {
         const cols = parseCSVLine(lines[i]);
         if (cols.length < 7) continue;
         const monthIdx = monthNames.indexOf(cols[4]);
-        const driveRaw = cols.length > 7 ? cols[7] : "";
+        const keywordsRaw = cols.length > 7 ? cols[7] : "";
+        const driveRaw = cols.length > 8 ? cols[8] : "";
+        const parsedKeywords = keywordsRaw.split(";").map(k => k.trim()).filter(Boolean);
         newProjects.push({
           id: crypto.randomUUID(),
           title: cols[0],
@@ -161,6 +163,7 @@ const Index = () => {
           month: monthIdx > 0 ? monthIdx : 1,
           year: parseInt(String(cols[5]), 10) || new Date().getFullYear(),
           thesisCoordinator: cols[6],
+          keywords: parsedKeywords.length > 0 ? parsedKeywords : undefined,
           driveLink: normalizeDriveLink(driveRaw),
         });
       }
