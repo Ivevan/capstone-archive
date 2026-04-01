@@ -69,13 +69,15 @@ const Index = () => {
         case "adviser": return p.adviser.toLowerCase().includes(q);
         case "coordinator": return p.thesisCoordinator.toLowerCase().includes(q);
         case "panel": return p.panelMembers.some(m => m.toLowerCase().includes(q));
+        case "keyword": return (p.keywords || []).some(k => k.toLowerCase().includes(q));
         default:
           return (
             p.title.toLowerCase().includes(q) ||
             p.authors.some(a => a.toLowerCase().includes(q)) ||
             p.adviser.toLowerCase().includes(q) ||
             p.thesisCoordinator.toLowerCase().includes(q) ||
-            p.panelMembers.some(m => m.toLowerCase().includes(q))
+            p.panelMembers.some(m => m.toLowerCase().includes(q)) ||
+            (p.keywords || []).some(k => k.toLowerCase().includes(q))
           );
       }
     });
