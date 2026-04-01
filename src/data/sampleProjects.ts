@@ -46,6 +46,7 @@ export const sampleProjects: CapstoneProject[] = [
     year: 2024,
     month: 1,
     thesisCoordinator: "Dr. Ramon Estrada",
+    keywords: ["Mobile App", "Mental Health", "Healthcare"],
   },
   {
     id: "5",
