@@ -82,6 +82,8 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
       return;
     }
 
+    const parsedKeywords = keywords.split(",").map(k => k.trim()).filter(Boolean);
+
     const project: CapstoneProject = {
       id: crypto.randomUUID(),
       title: title.trim(),
@@ -91,6 +93,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
       year: parseInt(year),
       month: parseInt(month),
       thesisCoordinator: coordinator.trim(),
+      keywords: parsedKeywords.length > 0 ? parsedKeywords : undefined,
       driveLink: driveLink.trim() || undefined,
     };
 
