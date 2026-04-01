@@ -69,7 +69,7 @@ const Index = () => {
         case "adviser": return p.adviser.toLowerCase().includes(q);
         case "coordinator": return p.thesisCoordinator.toLowerCase().includes(q);
         case "panel": return p.panelMembers.some(m => m.toLowerCase().includes(q));
-        case "keyword": return (p.keywords || []).some(k => k.toLowerCase().includes(q));
+        case "keyword": return (p.keywords || []).some(k => k.toLowerCase() === q);
         default:
           return (
             p.title.toLowerCase().includes(q) ||
