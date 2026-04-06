@@ -33,7 +33,15 @@ const monthNames = [
 const ITEMS_PER_PAGE = 10;
 
 const Index = () => {
-  const [projects, setProjects] = useState<CapstoneProject[]>(sampleProjects);
+  const [projects, setProjects] = useState<CapstoneProject[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProjects()
+      .then((data) => setProjects(data))
+      .catch(() => toast.error("Failed to load projects from database."))
+      .finally(() => setLoading(false));
+  }, []);
   const [search, setSearch] = useState("");
   const [searchCategory, setSearchCategory] = useState<string>("all");
   const [sortField, setSortField] = useState<SortField>("date");
