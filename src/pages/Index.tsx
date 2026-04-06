@@ -115,8 +115,14 @@ const Index = () => {
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const paginatedItems = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  const handleAdd = (project: CapstoneProject) => {
-    setProjects(prev => [project, ...prev]);
+  const handleAdd = async (project: CapstoneProject) => {
+    try {
+      const { id, ...data } = project;
+      const newId = await addProjectToDb(data);
+      setProjects(prev => [{ ...project, id: newId }, ...prev]);
+    } catch {
+      toast.error("Failed to save project to database.");
+    }
   };
 
   const handleRowClick = (project: CapstoneProject) => {
