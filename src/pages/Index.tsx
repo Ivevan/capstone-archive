@@ -158,7 +158,7 @@ const Index = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const raw = event.target?.result as string;
       const text = stripCsvBom(raw);
       const lines = text.split(/\r?\n/).filter((l) => l.trim());
