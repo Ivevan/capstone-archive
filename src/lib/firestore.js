@@ -30,7 +30,11 @@ export async function fetchProjects() {
 }
 
 export async function addProject(project) {
-  const docRef = await addDoc(collection(db, COLLECTION), project);
+  // Firestore does not accept undefined values – strip them out
+  const clean = Object.fromEntries(
+    Object.entries(project).filter(([, v]) => v !== undefined)
+  );
+  const docRef = await addDoc(collection(db, COLLECTION), clean);
   return docRef.id;
 }
 
