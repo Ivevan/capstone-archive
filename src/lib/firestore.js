@@ -6,11 +6,10 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import { CapstoneProject } from "@/types/capstone";
 
 const COLLECTION = "projects";
 
-export async function fetchProjects(): Promise<CapstoneProject[]> {
+export async function fetchProjects() {
   const q = query(collection(db, COLLECTION), orderBy("year", "desc"));
   const snapshot = await getDocs(q);
   return snapshot.docs.map((doc) => {
@@ -26,21 +25,17 @@ export async function fetchProjects(): Promise<CapstoneProject[]> {
       thesisCoordinator: data.thesisCoordinator ?? "",
       keywords: data.keywords,
       driveLink: data.driveLink,
-    } as CapstoneProject;
+    };
   });
 }
 
-export async function addProject(
-  project: Omit<CapstoneProject, "id">
-): Promise<string> {
+export async function addProject(project) {
   const docRef = await addDoc(collection(db, COLLECTION), project);
   return docRef.id;
 }
 
-export async function addProjectsBatch(
-  projects: Omit<CapstoneProject, "id">[]
-): Promise<string[]> {
-  const ids: string[] = [];
+export async function addProjectsBatch(projects) {
+  const ids = [];
   for (const project of projects) {
     const id = await addProject(project);
     ids.push(id);

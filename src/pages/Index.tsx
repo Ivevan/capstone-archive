@@ -115,8 +115,14 @@ const Index = () => {
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const paginatedItems = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  const handleAdd = (project: CapstoneProject) => {
-    setProjects(prev => [project, ...prev]);
+  const handleAdd = async (project: CapstoneProject) => {
+    try {
+      const { id, ...data } = project;
+      const newId = await addProjectToDb(data);
+      setProjects(prev => [{ ...project, id: newId }, ...prev]);
+    } catch {
+      toast.error("Failed to save project to database.");
+    }
   };
 
   const handleRowClick = (project: CapstoneProject) => {
@@ -152,7 +158,7 @@ const Index = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const raw = event.target?.result as string;
       const text = stripCsvBom(raw);
       const lines = text.split(/\r?\n/).filter((l) => l.trim());
@@ -182,24 +188,28 @@ const Index = () => {
         });
       }
       if (newProjects.length > 0) {
-        setProjects((prev) => {
-          const existingKeys = new Set(
-            prev.map((p) => `${p.title.toLowerCase()}|${p.authors.map(a => a.toLowerCase()).sort().join(";")}`)
-          );
-          const unique = newProjects.filter(
-            (p) => !existingKeys.has(`${p.title.toLowerCase()}|${p.authors.map(a => a.toLowerCase()).sort().join(";")}`)
-          );
-          const skipped = newProjects.length - unique.length;
-          if (skipped > 0) {
-            toast.info(`Skipped ${skipped} duplicate(s).`);
+        const existingKeys = new Set(
+          projects.map((p) => `${p.title.toLowerCase()}|${p.authors.map(a => a.toLowerCase()).sort().join(";")}`)
+        );
+        const unique = newProjects.filter(
+          (p) => !existingKeys.has(`${p.title.toLowerCase()}|${p.authors.map(a => a.toLowerCase()).sort().join(";")}`)
+        );
+        const skipped = newProjects.length - unique.length;
+        if (skipped > 0) {
+          toast.info(`Skipped ${skipped} duplicate(s).`);
+        }
+        if (unique.length === 0) {
+          toast.info("All projects already exist. No new records imported.");
+        } else {
+          try {
+            const ids = await addProjectsBatch(unique.map(({ id, ...rest }) => rest));
+            const saved = unique.map((p, i) => ({ ...p, id: ids[i] }));
+            setProjects(prev => [...saved, ...prev]);
+            toast.success(`Imported ${unique.length} new project(s)!`);
+          } catch {
+            toast.error("Failed to save imported projects to database.");
           }
-          if (unique.length === 0) {
-            toast.info("All projects already exist. No new records imported.");
-            return prev;
-          }
-          toast.success(`Imported ${unique.length} new project(s)!`);
-          return [...unique, ...prev];
-        });
+        }
       } else {
         toast.error("No valid projects found in CSV.");
       }
@@ -275,7 +285,12 @@ const Index = () => {
 
       {/* Table */}
       <div className="container max-w-6xl px-4 sm:px-6 pb-12">
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-16 text-muted-foreground">
+            <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30 animate-pulse" />
+            <p className="font-serif text-lg">Loading projects...</p>
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p className="font-serif text-lg">No projects found</p>
