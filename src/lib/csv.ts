@@ -1,7 +1,7 @@
 /**
- * Parses one CSV line (RFC 4180-style): quoted fields may contain commas.
+ * Parses one delimited line (RFC 4180-style): quoted fields may contain delimiters.
  */
-export function parseCSVLine(line: string): string[] {
+export function parseDelimitedLine(line: string, delimiter: string): string[] {
   const result: string[] = [];
   let current = "";
   let inQuotes = false;
@@ -20,7 +20,7 @@ export function parseCSVLine(line: string): string[] {
       }
     } else if (c === '"') {
       inQuotes = true;
-    } else if (c === ",") {
+    } else if (c === delimiter) {
       result.push(current);
       current = "";
     } else {
@@ -29,6 +29,16 @@ export function parseCSVLine(line: string): string[] {
   }
   result.push(current);
   return result.map((f) => f.trim());
+}
+
+/** Parses one comma-separated CSV line. */
+export function parseCSVLine(line: string): string[] {
+  return parseDelimitedLine(line, ",");
+}
+
+/** Parses one tab-separated TSV line. */
+export function parseTSVLine(line: string): string[] {
+  return parseDelimitedLine(line, "\t");
 }
 
 export function stripCsvBom(text: string): string {

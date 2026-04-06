@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseCSVLine, stripCsvBom, escapeCsvField } from "./csv";
+import { parseCSVLine, parseTSVLine, stripCsvBom, escapeCsvField } from "./csv";
 
 describe("parseCSVLine", () => {
   it("parses quoted fields with commas", () => {
@@ -15,6 +15,14 @@ describe("parseCSVLine", () => {
     const line = '"Say ""hello""","a","b","c","January","2024","coord",""';
     const cols = parseCSVLine(line);
     expect(cols[0]).toBe('Say "hello"');
+  });
+});
+
+describe("parseTSVLine", () => {
+  it("parses tab-separated rows", () => {
+    const line = "title\tauthors\tyear\tmonth\tdriveLink";
+    const cols = parseTSVLine(line);
+    expect(cols).toEqual(["title", "authors", "year", "month", "driveLink"]);
   });
 });
 

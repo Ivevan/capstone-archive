@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/table";
 import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
-import { parseCSVLine, stripCsvBom, escapeCsvField } from "@/lib/csv";
+import { parseCSVLine, parseTSVLine, stripCsvBom, escapeCsvField } from "@/lib/csv";
 import { normalizeDriveLink } from "@/lib/driveLink";
 
 const monthNames = [
@@ -31,6 +31,42 @@ const monthNames = [
 ];
 
 const ITEMS_PER_PAGE = 10;
+
+const normalizeHeaderKey = (s: string) =>
+  s.toLowerCase().trim().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
+
+const monthFromValue = (raw: string): number => {
+  const s = (raw || "").trim();
+  if (!s) return 1;
+  const n = parseInt(s, 10);
+  if (Number.isFinite(n) && n >= 1 && n <= 12) return n;
+  const idx = monthNames.findIndex((m) => m.toLowerCase() === s.toLowerCase());
+  return idx > 0 ? idx : 1;
+};
+
+const splitPeople = (raw: string): string[] => {
+  const s = (raw || "").trim();
+  if (!s) return [];
+
+  // Prefer semicolon delimiter (our exporter uses it)
+  const semi = s.split(";").map((x) => x.trim()).filter(Boolean);
+  if (semi.length > 1) return semi;
+
+  // Fall back to comma delimiter, but try to keep suffixes like "MIT", "DIT", etc attached
+  const parts = s.split(",").map((x) => x.trim()).filter(Boolean);
+  const merged: string[] = [];
+  for (let i = 0; i < parts.length; i++) {
+    const cur = parts[i];
+    const next = parts[i + 1];
+    if (next && /^[A-Z]{2,6}\.?$/.test(next)) {
+      merged.push(`${cur}, ${next}`);
+      i++;
+    } else {
+      merged.push(cur);
+    }
+  }
+  return merged.length ? merged : [s];
+};
 
 const Index = () => {
   const [projects, setProjects] = useState<CapstoneProject[]>([]);
@@ -167,23 +203,49 @@ const Index = () => {
         toast.error("CSV file is empty or invalid.");
         return;
       }
+
+      const delimiter: "csv" | "tsv" =
+        (lines[0].match(/\t/g)?.length || 0) > (lines[0].match(/,/g)?.length || 0) ? "tsv" : "csv";
+      const parseLine = delimiter === "tsv" ? parseTSVLine : parseCSVLine;
+
+      const headerCols = parseLine(lines[0]).map(normalizeHeaderKey);
+      const colIndex = (name: string) => headerCols.indexOf(normalizeHeaderKey(name));
+      const getFromRow = (cols: string[], name: string) => {
+        const idx = colIndex(name);
+        return idx >= 0 ? String(cols[idx] ?? "").trim() : "";
+      };
+
       const newProjects: CapstoneProject[] = [];
       for (let i = 1; i < lines.length; i++) {
-        const cols = parseCSVLine(lines[i]);
-        if (cols.length < 7) continue;
-        const monthIdx = monthNames.indexOf(cols[4]);
-        const keywordsRaw = cols.length > 7 ? cols[7] : "";
-        const driveRaw = cols.length > 8 ? cols[8] : "";
-        const parsedKeywords = keywordsRaw.split(";").map(k => k.trim()).filter(Boolean);
+        const cols = parseLine(lines[i]);
+        if (cols.length < 2) continue;
+
+        // Flexible header mapping: supports both our exported CSV and your TSV format
+        const title = getFromRow(cols, "title");
+        if (!title) continue;
+
+        const authorsRaw = getFromRow(cols, "authors") || getFromRow(cols, "author");
+        const panelRaw =
+          getFromRow(cols, "panelMembers") || getFromRow(cols, "panel") || getFromRow(cols, "panelmembers");
+        const adviser = getFromRow(cols, "adviser");
+        const yearRaw = getFromRow(cols, "year");
+        const monthRaw = getFromRow(cols, "month");
+        const coordinator = getFromRow(cols, "thesisCoordinator") || getFromRow(cols, "coordinator");
+        const keywordsRaw = getFromRow(cols, "keyword") || getFromRow(cols, "keywords");
+        const driveRaw = getFromRow(cols, "driveLink") || getFromRow(cols, "drive");
+
+        const parsedYear = parseInt(yearRaw, 10);
+        const parsedKeywords = keywordsRaw.split(";").map((k) => k.trim()).filter(Boolean);
+
         newProjects.push({
           id: crypto.randomUUID(),
-          title: cols[0],
-          authors: cols[1].split(";").map((a) => a.trim()).filter(Boolean),
-          adviser: cols[2],
-          panelMembers: cols[3].split(";").map((m) => m.trim()).filter(Boolean),
-          month: monthIdx > 0 ? monthIdx : 1,
-          year: parseInt(String(cols[5]), 10) || new Date().getFullYear(),
-          thesisCoordinator: cols[6],
+          title,
+          authors: splitPeople(authorsRaw),
+          panelMembers: splitPeople(panelRaw),
+          adviser,
+          year: Number.isFinite(parsedYear) && parsedYear > 1900 ? parsedYear : new Date().getFullYear(),
+          month: monthFromValue(monthRaw),
+          thesisCoordinator: coordinator,
           keywords: parsedKeywords.length > 0 ? parsedKeywords : undefined,
           driveLink: normalizeDriveLink(driveRaw),
         });
