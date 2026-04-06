@@ -1,6 +1,6 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { CapstoneProject, SortField, SortDirection } from "@/types/capstone";
-import { sampleProjects } from "@/data/sampleProjects";
+import { fetchProjects, addProject as addProjectToDb, addProjectsBatch } from "@/lib/firestore";
 import AddProjectDialog from "@/components/AddProjectDialog";
 import ProjectDetailDialog from "@/components/ProjectDetailDialog";
 import { Input } from "@/components/ui/input";
