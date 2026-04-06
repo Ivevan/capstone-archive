@@ -188,24 +188,28 @@ const Index = () => {
         });
       }
       if (newProjects.length > 0) {
-        setProjects((prev) => {
-          const existingKeys = new Set(
-            prev.map((p) => `${p.title.toLowerCase()}|${p.authors.map(a => a.toLowerCase()).sort().join(";")}`)
-          );
-          const unique = newProjects.filter(
-            (p) => !existingKeys.has(`${p.title.toLowerCase()}|${p.authors.map(a => a.toLowerCase()).sort().join(";")}`)
-          );
-          const skipped = newProjects.length - unique.length;
-          if (skipped > 0) {
-            toast.info(`Skipped ${skipped} duplicate(s).`);
+        const existingKeys = new Set(
+          projects.map((p) => `${p.title.toLowerCase()}|${p.authors.map(a => a.toLowerCase()).sort().join(";")}`)
+        );
+        const unique = newProjects.filter(
+          (p) => !existingKeys.has(`${p.title.toLowerCase()}|${p.authors.map(a => a.toLowerCase()).sort().join(";")}`)
+        );
+        const skipped = newProjects.length - unique.length;
+        if (skipped > 0) {
+          toast.info(`Skipped ${skipped} duplicate(s).`);
+        }
+        if (unique.length === 0) {
+          toast.info("All projects already exist. No new records imported.");
+        } else {
+          try {
+            const ids = await addProjectsBatch(unique.map(({ id, ...rest }) => rest));
+            const saved = unique.map((p, i) => ({ ...p, id: ids[i] }));
+            setProjects(prev => [...saved, ...prev]);
+            toast.success(`Imported ${unique.length} new project(s)!`);
+          } catch {
+            toast.error("Failed to save imported projects to database.");
           }
-          if (unique.length === 0) {
-            toast.info("All projects already exist. No new records imported.");
-            return prev;
-          }
-          toast.success(`Imported ${unique.length} new project(s)!`);
-          return [...unique, ...prev];
-        });
+        }
       } else {
         toast.error("No valid projects found in CSV.");
       }
