@@ -120,7 +120,8 @@ const Index = () => {
       const { id, ...data } = project;
       const newId = await addProjectToDb(data);
       setProjects(prev => [{ ...project, id: newId }, ...prev]);
-    } catch {
+    } catch (err) {
+      console.error("Failed to add project:", err);
       toast.error("Failed to save project to database.");
     }
   };
@@ -206,7 +207,8 @@ const Index = () => {
             const saved = unique.map((p, i) => ({ ...p, id: ids[i] }));
             setProjects(prev => [...saved, ...prev]);
             toast.success(`Imported ${unique.length} new project(s)!`);
-          } catch {
+          } catch (err) {
+            console.error("Failed to import projects:", err);
             toast.error("Failed to save imported projects to database.");
           }
         }
