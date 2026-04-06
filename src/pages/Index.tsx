@@ -285,7 +285,12 @@ const Index = () => {
 
       {/* Table */}
       <div className="container max-w-6xl px-4 sm:px-6 pb-12">
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-16 text-muted-foreground">
+            <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30 animate-pulse" />
+            <p className="font-serif text-lg">Loading projects...</p>
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p className="font-serif text-lg">No projects found</p>
