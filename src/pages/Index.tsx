@@ -328,13 +328,28 @@ const Index = () => {
               />
             </div>
           </div>
-          <div className="flex flex-wrap gap-2 items-center">
-            <Button variant="outline" size="sm" onClick={exportCSV} className="gap-1.5 text-xs sm:text-sm">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:items-center">
+            <AddProjectDialog onAdd={handleAdd} triggerClassName="w-full sm:w-auto justify-center" />
+
+            <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={exportCSV}
+                className="gap-1.5 text-xs sm:text-sm w-full sm:w-auto justify-center"
+              >
               <Download className="w-4 h-4" /> Export
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="gap-1.5 text-xs sm:text-sm">
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => fileInputRef.current?.click()}
+                className="gap-1.5 text-xs sm:text-sm w-full sm:w-auto justify-center"
+              >
               <Upload className="w-4 h-4" /> Import
-            </Button>
+              </Button>
+            </div>
+
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
@@ -362,23 +377,28 @@ const Index = () => {
                   size="sm"
                   className="w-full gap-1.5 text-xs"
                   onClick={() => {
-                    import("xlsx").then((XLSX) => {
-                      const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator", "Keywords", "Drive Link"];
-                      const sample = ["Sample Capstone Project", "Author One; Author Two", "Dr. Adviser", "Panel A; Panel B", "June", "2025", "Dr. Coordinator", "AI; Machine Learning", ""];
-                      const ws = XLSX.utils.aoa_to_sheet([headers, sample]);
-                      ws["!cols"] = [{ wch: 30 }, { wch: 25 }, { wch: 18 }, { wch: 25 }, { wch: 10 }, { wch: 8 }, { wch: 20 }, { wch: 25 }, { wch: 30 }];
-                      const wb = XLSX.utils.book_new();
-                      XLSX.utils.book_append_sheet(wb, ws, "Template");
-                      XLSX.writeFile(wb, "capstone_template.xlsx");
-                    });
+                    const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator", "Keywords", "Drive Link"];
+                    const sample = ["Sample Capstone Project", "Author One; Author Two", "Dr. Adviser", "Panel A; Panel B", "6", "2025", "Dr. Coordinator", "AI; Machine Learning", ""];
+
+                    const csv = [
+                      headers.join(","),
+                      sample.map((v) => escapeCsvField(v)).join(","),
+                    ].join("\n");
+
+                    const blob = new Blob([csv], { type: "text/csv" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "capstone_template.csv";
+                    a.click();
+                    URL.revokeObjectURL(url);
                   }}
                 >
-                  <Download className="w-3 h-3" /> Download Template (.xlsx)
+                  <Download className="w-3 h-3" /> Download Template (.csv)
                 </Button>
               </PopoverContent>
             </Popover>
             <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={importCSV} />
-            <AddProjectDialog onAdd={handleAdd} />
           </div>
         </div>
 

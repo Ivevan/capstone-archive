@@ -22,6 +22,7 @@ import { toast } from "sonner";
 
 interface AddProjectDialogProps {
   onAdd: (project: CapstoneProject) => void;
+  triggerClassName?: string;
 }
 
 const months = [
@@ -32,7 +33,7 @@ const months = [
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
 
-const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
+const AddProjectDialog = ({ onAdd, triggerClassName }: AddProjectDialogProps) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [authors, setAuthors] = useState<string[]>([""]);
@@ -106,7 +107,7 @@ const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
+        <Button className={["gap-2", triggerClassName].filter(Boolean).join(" ")}>
           <Plus className="w-4 h-4" />
           Add Project
         </Button>
