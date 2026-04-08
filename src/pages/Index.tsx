@@ -437,12 +437,12 @@ const Index = () => {
               const pages: (number | "...")[] = [];
               if (totalPages <= 5) {
                 for (let i = 1; i <= totalPages; i++) pages.push(i);
+              } else if (currentPage <= 3) {
+                pages.push(1, 2, 3, "...", totalPages);
+              } else if (currentPage >= totalPages - 2) {
+                pages.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
               } else {
-                pages.push(1);
-                if (currentPage > 3) pages.push("...");
-                for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) pages.push(i);
-                if (currentPage < totalPages - 2) pages.push("...");
-                pages.push(totalPages);
+                pages.push(1, "...", currentPage, "...", totalPages);
               }
               return (
                 <div className="flex items-center justify-between px-4 py-3 mt-2 mb-4 text-sm">
@@ -457,7 +457,7 @@ const Index = () => {
                       page === "..." ? (
                         <span key={`e${idx}`} className="w-8 h-8 flex items-center justify-center text-xs text-muted-foreground">…</span>
                       ) : (
-                        <Button key={page} variant={page === currentPage ? "default" : "ghost"} size="icon" className="h-8 w-8 text-xs" onClick={() => setCurrentPage(page)}>
+                        <Button key={page} variant={page === currentPage ? "default" : "ghost"} size="icon" className="h-8 w-8 text-xs" onClick={() => setCurrentPage(page as number)}>
                           {page}
                         </Button>
                       )
