@@ -331,7 +331,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:items-center">
             <AddProjectDialog onAdd={handleAdd} triggerClassName="w-full sm:w-auto justify-center" />
 
-            <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:gap-2">
+            <div className="grid grid-cols-3 gap-2 w-full sm:w-auto sm:flex sm:gap-2 sm:items-center">
               <Button
                 variant="outline"
                 size="sm"
@@ -340,17 +340,24 @@ const Index = () => {
               >
                 <Download className="w-4 h-4" /> Export
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => fileInputRef.current?.click()}
+                className="gap-1.5 text-xs sm:text-sm w-full sm:w-auto justify-center"
+              >
+                <Upload className="w-4 h-4" />
+                Import
+              </Button>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-1.5 text-xs sm:text-sm w-full sm:w-auto justify-center"
-                    onClick={() => fileInputRef.current?.click()}
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-muted-foreground justify-center"
+                    aria-label="CSV import help"
                   >
-                    <Upload className="w-4 h-4" />
-                    Import
-                    <Info className="w-3 h-3 ml-1 text-muted-foreground" />
+                    <Info className="w-4 h-4" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-80 text-sm" align="start">
