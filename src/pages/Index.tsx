@@ -338,25 +338,22 @@ const Index = () => {
                 onClick={exportCSV}
                 className="gap-1.5 text-xs sm:text-sm w-full sm:w-auto justify-center"
               >
-              <Download className="w-4 h-4" /> Export
+                <Download className="w-4 h-4" /> Export
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => fileInputRef.current?.click()}
-                className="gap-1.5 text-xs sm:text-sm w-full sm:w-auto justify-center"
-              >
-              <Upload className="w-4 h-4" /> Import
-              </Button>
-            </div>
-
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
-                  <Info className="w-4 h-4" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 text-sm" align="start">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 text-xs sm:text-sm w-full sm:w-auto justify-center"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="w-4 h-4" />
+                    Import
+                    <Info className="w-3 h-3 ml-1 text-muted-foreground" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 text-sm" align="start">
                 <h4 className="font-semibold mb-2">CSV Import Format</h4>
                 <p className="text-muted-foreground text-xs mb-2">
                   The CSV file must include a header row. Supported columns:
@@ -396,8 +393,9 @@ const Index = () => {
                 >
                   <Download className="w-3 h-3" /> Download Template (.csv)
                 </Button>
-              </PopoverContent>
-            </Popover>
+                </PopoverContent>
+              </Popover>
+            </div>
             <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={importCSV} />
           </div>
         </div>
