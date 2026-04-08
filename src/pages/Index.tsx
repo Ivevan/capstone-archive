@@ -20,7 +20,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown, ExternalLink, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { toast } from "sonner";
 import { parseCSVLine, parseTSVLine, stripCsvBom, escapeCsvField } from "@/lib/csv";
 import { normalizeDriveLink } from "@/lib/driveLink";
@@ -334,6 +335,49 @@ const Index = () => {
             <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="gap-1.5 text-xs sm:text-sm">
               <Upload className="w-4 h-4" /> Import
             </Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
+                  <Info className="w-4 h-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 text-sm" align="start">
+                <h4 className="font-semibold mb-2">CSV Import Format</h4>
+                <p className="text-muted-foreground text-xs mb-2">
+                  The CSV file must include a header row. Supported columns:
+                </p>
+                <ul className="text-xs space-y-1 text-muted-foreground list-disc pl-4 mb-3">
+                  <li><span className="font-medium text-foreground">Title</span> — required</li>
+                  <li><span className="font-medium text-foreground">Authors</span> — semicolon-separated</li>
+                  <li><span className="font-medium text-foreground">Adviser</span></li>
+                  <li><span className="font-medium text-foreground">Panel Members</span> — semicolon-separated</li>
+                  <li><span className="font-medium text-foreground">Month</span> — name or number (1–12)</li>
+                  <li><span className="font-medium text-foreground">Year</span></li>
+                  <li><span className="font-medium text-foreground">Thesis Coordinator</span></li>
+                  <li><span className="font-medium text-foreground">Keywords</span> — semicolon-separated</li>
+                  <li><span className="font-medium text-foreground">Drive Link</span> — Google Drive URL</li>
+                </ul>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full gap-1.5 text-xs"
+                  onClick={() => {
+                    const headers = "Title,Authors,Adviser,Panel Members,Month,Year,Thesis Coordinator,Keywords,Drive Link";
+                    const sample = '"Sample Capstone Project","Author One; Author Two","Dr. Adviser","Panel A; Panel B","June","2025","Dr. Coordinator","AI; Machine Learning",""';
+                    const csv = `${headers}\n${sample}`;
+                    const blob = new Blob([csv], { type: "text/csv" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "capstone_template.csv";
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  }}
+                >
+                  <Download className="w-3 h-3" /> Download Template
+                </Button>
+              </PopoverContent>
+            </Popover>
             <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={importCSV} />
             <AddProjectDialog onAdd={handleAdd} />
           </div>
