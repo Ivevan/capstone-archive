@@ -300,7 +300,7 @@ const Index = () => {
       </header>
 
       {/* Search + Actions */}
-      <div className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6">
+      <div className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6 flex-1 pb-8">
         <div className="flex flex-col gap-3">
           <div className="flex gap-2 w-full">
             <Select value={searchCategory} onValueChange={setSearchCategory}>
@@ -434,7 +434,7 @@ const Index = () => {
               </Table>
             </div>
             {totalPages > 1 && (
-              <div className="flex items-center justify-between px-4 py-3 mt-2 text-sm">
+              <div className="flex items-center justify-between px-4 py-3 mt-2 mb-4 text-sm">
                 <span className="text-xs text-muted-foreground">
                   Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} of {filtered.length}
                 </span>
