@@ -362,19 +362,18 @@ const Index = () => {
                   size="sm"
                   className="w-full gap-1.5 text-xs"
                   onClick={() => {
-                    const headers = "Title,Authors,Adviser,Panel Members,Month,Year,Thesis Coordinator,Keywords,Drive Link";
-                    const sample = '"Sample Capstone Project","Author One; Author Two","Dr. Adviser","Panel A; Panel B","June","2025","Dr. Coordinator","AI; Machine Learning",""';
-                    const csv = `${headers}\n${sample}`;
-                    const blob = new Blob([csv], { type: "text/csv" });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = "capstone_template.csv";
-                    a.click();
-                    URL.revokeObjectURL(url);
+                    import("xlsx").then((XLSX) => {
+                      const headers = ["Title", "Authors", "Adviser", "Panel Members", "Month", "Year", "Thesis Coordinator", "Keywords", "Drive Link"];
+                      const sample = ["Sample Capstone Project", "Author One; Author Two", "Dr. Adviser", "Panel A; Panel B", "June", "2025", "Dr. Coordinator", "AI; Machine Learning", ""];
+                      const ws = XLSX.utils.aoa_to_sheet([headers, sample]);
+                      ws["!cols"] = [{ wch: 30 }, { wch: 25 }, { wch: 18 }, { wch: 25 }, { wch: 10 }, { wch: 8 }, { wch: 20 }, { wch: 25 }, { wch: 30 }];
+                      const wb = XLSX.utils.book_new();
+                      XLSX.utils.book_append_sheet(wb, ws, "Template");
+                      XLSX.writeFile(wb, "capstone_template.xlsx");
+                    });
                   }}
                 >
-                  <Download className="w-3 h-3" /> Download Template
+                  <Download className="w-3 h-3" /> Download Template (.xlsx)
                 </Button>
               </PopoverContent>
             </Popover>
