@@ -146,9 +146,12 @@ const Index = () => {
       return sortDir === "asc" ? cmp : -cmp;
     });
 
-    setCurrentPage(1);
     return list;
   }, [projects, search, searchCategory, sortField, sortDir]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, searchCategory, sortField, sortDir, projects.length]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const paginatedItems = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -302,7 +305,7 @@ const Index = () => {
       </header>
 
       {/* Search + Actions */}
-      <div className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6 flex-1 pb-8">
+      <div className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6 pb-8">
         <div className="flex flex-col gap-3">
           <div className="flex gap-2 w-full">
             <Select value={searchCategory} onValueChange={setSearchCategory}>
