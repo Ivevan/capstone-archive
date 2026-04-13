@@ -4,6 +4,7 @@ import { fetchProjects, addProject as addProjectToDb, addProjectsBatch } from "@
 import AddProjectDialog from "@/components/AddProjectDialog";
 import ProjectDetailDialog from "@/components/ProjectDetailDialog";
 import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
 import {
   Select,
   SelectContent,

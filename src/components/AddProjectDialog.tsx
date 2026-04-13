@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CapstoneProject } from "@/types/capstone";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AutocompleteInput } from "@/components/AutocompleteInput";
+import { AutocompleteMultiInput } from "@/components/AutocompleteMultiInput";
+import { fetchProjects } from "@/lib/firestore";
 import {
   Dialog,
   DialogContent,
@@ -35,15 +38,31 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
 
 const AddProjectDialog = ({ onAdd, triggerClassName }: AddProjectDialogProps) => {
   const [open, setOpen] = useState(false);
+  const [catalogProjects, setCatalogProjects] = useState<CapstoneProject[]>([]);
   const [title, setTitle] = useState("");
   const [authors, setAuthors] = useState<string[]>([""]);
-  const [panelMembers, setPanelMembers] = useState<string[]>([""]);
+  const [panelMembers, setPanelMembers] = useState<string[]>([]);
   const [adviser, setAdviser] = useState("");
   const [keywords, setKeywords] = useState("");
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [coordinator, setCoordinator] = useState("");
   const [driveLink, setDriveLink] = useState("");
+
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    fetchProjects()
+      .then((rows) => {
+        if (!cancelled) setCatalogProjects(rows);
+      })
+      .catch(() => {
+        if (!cancelled) setCatalogProjects([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [open]);
 
   const addAuthor = () => {
     if (authors.length < 4) setAuthors([...authors, ""]);
@@ -59,19 +78,16 @@ const AddProjectDialog = ({ onAdd, triggerClassName }: AddProjectDialogProps) =>
     setAuthors(copy);
   };
 
-  const addPanel = () => setPanelMembers([...panelMembers, ""]);
-  const removePanel = (i: number) => {
-    if (panelMembers.length > 1) setPanelMembers(panelMembers.filter((_, idx) => idx !== i));
-  };
-  const updatePanel = (i: number, val: string) => {
-    const copy = [...panelMembers];
-    copy[i] = val;
-    setPanelMembers(copy);
-  };
-
   const reset = () => {
-    setTitle(""); setAuthors([""]); setPanelMembers([""]); setAdviser("");
-    setKeywords(""); setMonth(""); setYear(""); setCoordinator(""); setDriveLink("");
+    setTitle("");
+    setAuthors([""]);
+    setPanelMembers([]);
+    setAdviser("");
+    setKeywords("");
+    setMonth("");
+    setYear("");
+    setCoordinator("");
+    setDriveLink("");
   };
 
   const handleSubmit = () => {
@@ -146,34 +162,45 @@ const AddProjectDialog = ({ onAdd, triggerClassName }: AddProjectDialogProps) =>
           </div>
 
           <div>
-            <Label>Adviser *</Label>
-            <Input value={adviser} onChange={e => setAdviser(e.target.value)} placeholder="Adviser name" />
+            <Label htmlFor="add-adviser">Adviser *</Label>
+            <AutocompleteInput
+              id="add-adviser"
+              type="adviser"
+              value={adviser}
+              onChange={setAdviser}
+              projects={catalogProjects}
+              fetchEnabled={open}
+              placeholder="Adviser name"
+            />
           </div>
 
           <div>
-            <Label>Keywords <span className="text-muted-foreground font-normal">(comma-separated)</span></Label>
-            <Input value={keywords} onChange={e => setKeywords(e.target.value)} placeholder="e.g. IoT, Machine Learning, Mobile App" />
+            <Label htmlFor="add-keywords">
+              Keywords <span className="text-muted-foreground font-normal">(comma-separated)</span>
+            </Label>
+            <AutocompleteInput
+              id="add-keywords"
+              type="keyword"
+              value={keywords}
+              onChange={setKeywords}
+              projects={catalogProjects}
+              fetchEnabled={open}
+              keywordsMode
+              placeholder="e.g. IoT, Machine Learning, Mobile App"
+            />
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <Label>Panel Members</Label>
-              <Button type="button" variant="ghost" size="sm" onClick={addPanel} className="h-7 text-xs gap-1">
-                <Plus className="w-3 h-3" /> Add
-              </Button>
-            </div>
-            <div className="space-y-2">
-              {panelMembers.map((p, i) => (
-                <div key={i} className="flex gap-2">
-                  <Input value={p} onChange={e => updatePanel(i, e.target.value)} placeholder={`Panel member ${i + 1}`} />
-                  {panelMembers.length > 1 && (
-                    <Button type="button" variant="ghost" size="icon" onClick={() => removePanel(i)} className="shrink-0 h-10 w-10">
-                      <X className="w-4 h-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </div>
+            <Label htmlFor="add-panel">Panel Members</Label>
+            <AutocompleteMultiInput
+              id="add-panel"
+              type="panel"
+              value={panelMembers}
+              onChange={setPanelMembers}
+              projects={catalogProjects}
+              fetchEnabled={open}
+              placeholder="Type a name, then Enter or pick a suggestion"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -202,8 +229,16 @@ const AddProjectDialog = ({ onAdd, triggerClassName }: AddProjectDialogProps) =>
           </div>
 
           <div>
-            <Label>Thesis Coordinator *</Label>
-            <Input value={coordinator} onChange={e => setCoordinator(e.target.value)} placeholder="Coordinator name" />
+            <Label htmlFor="add-coordinator">Thesis Coordinator *</Label>
+            <AutocompleteInput
+              id="add-coordinator"
+              type="coordinator"
+              value={coordinator}
+              onChange={setCoordinator}
+              projects={catalogProjects}
+              fetchEnabled={open}
+              placeholder="Coordinator name"
+            />
           </div>
 
           <div>

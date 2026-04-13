@@ -46,7 +46,6 @@ const Landing = () => {
         >
           {/* Accent line */}
           <motion.div variants={fadeUp} custom={0}>
-            <div className="w-px h-12 bg-primary/30 mx-auto md:mx-0 mb-8" />
             <h1 className="font-serif text-4xl sm:text-5xl md:text-[3.4rem] font-bold leading-[1.1] tracking-tight text-foreground">
               <span className="text-primary">Capstone</span>
               <br />
