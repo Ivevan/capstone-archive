@@ -104,7 +104,7 @@ const Landing = () => {
       </div>
 
       {/* Right – themed side */}
-      <div className="flex-1 flex items-center justify-center bg-primary relative overflow-hidden">
+      <div className="hidden md:flex flex-1 items-center justify-center bg-primary relative overflow-hidden">
         {/* Layered glow effects */}
         <div className="absolute inset-0 opacity-[0.08] bg-[radial-gradient(circle_at_30%_40%,hsl(var(--primary-foreground))_0%,transparent_50%)]" />
         <div className="absolute inset-0 opacity-[0.05] bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary-foreground))_0%,transparent_40%)]" />
