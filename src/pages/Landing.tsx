@@ -34,7 +34,8 @@ const Landing = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 1 }}
+      initial={{ opacity: 0, filter: "blur(6px)" }}
+      animate={{ opacity: 1, filter: "blur(0px)" }}
       exit={{ opacity: 0, scale: 1.02, filter: "blur(8px)" }}
       transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
       className="h-screen overflow-hidden flex flex-col md:flex-row"

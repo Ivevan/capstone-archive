@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { CapstoneProject, SortField, SortDirection } from "@/types/capstone";
 import { fetchProjects, addProject as addProjectToDb, addProjectsBatch } from "@/lib/firestore";
 import AddProjectDialog from "@/components/AddProjectDialog";
@@ -21,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown, ExternalLink, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown, ExternalLink, ChevronLeft, ChevronRight, Info, ArrowLeft } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { toast } from "sonner";
 import { parseCSVLine, parseTSVLine, stripCsvBom, escapeCsvField } from "@/lib/csv";
@@ -291,8 +292,8 @@ const Index = () => {
     <motion.div
       initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
+      exit={{ opacity: 0, scale: 0.98, filter: "blur(8px)" }}
+      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
       className="min-h-screen bg-background flex flex-col"
     >
       {/* Hero / Header */}
@@ -302,6 +303,14 @@ const Index = () => {
           <h1 className="font-serif font-bold text-foreground tracking-tight text-3xl sm:text-2xl">
             Capstone Catalog
           </h1>
+          <Link
+            to="/"
+            className="ml-auto group inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
+            <span className="hidden sm:inline">Back to Home</span>
+            <span className="sm:hidden">Home</span>
+          </Link>
         </div>
         <div className="container max-w-6xl px-4 sm:px-6 pb-3">
           <p className="text-muted-foreground font-sans text-sm max-w-lg pl-[44px]">
