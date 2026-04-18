@@ -303,6 +303,14 @@ const Index = () => {
           <h1 className="font-serif font-bold text-foreground tracking-tight text-3xl sm:text-2xl">
             Capstone Catalog
           </h1>
+          <Link
+            to="/"
+            className="ml-auto group inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
+            <span className="hidden sm:inline">Back to Home</span>
+            <span className="sm:hidden">Home</span>
+          </Link>
         </div>
         <div className="container max-w-6xl px-4 sm:px-6 pb-3">
           <p className="text-muted-foreground font-sans text-sm max-w-lg pl-[44px]">
