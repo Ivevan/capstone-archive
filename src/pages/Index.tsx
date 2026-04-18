@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown, ExternalLink, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { Search, ArrowUpDown, GraduationCap, Download, Upload, BookOpen, ChevronUp, ChevronDown, ExternalLink, ChevronLeft, ChevronRight, Info, ArrowLeft } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { toast } from "sonner";
 import { parseCSVLine, parseTSVLine, stripCsvBom, escapeCsvField } from "@/lib/csv";
