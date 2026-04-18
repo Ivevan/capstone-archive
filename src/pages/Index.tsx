@@ -288,7 +288,13 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <motion.div
+      initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
+      className="min-h-screen bg-background flex flex-col"
+    >
       {/* Hero / Header */}
       <header className="border-b border-border/60 bg-card">
         <div className="container max-w-6xl px-4 sm:px-6 py-3 flex items-center gap-2">
