@@ -175,7 +175,7 @@ const Landing = () => {
           <div className="absolute -top-3 -right-3 w-24 h-16 rounded-xl bg-primary-foreground/[0.03] border border-primary-foreground/[0.05] backdrop-blur-sm -z-10" />
         </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
