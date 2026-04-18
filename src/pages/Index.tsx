@@ -563,7 +563,7 @@ const Index = () => {
           <span>Information Technology Capstone Records</span>
         </div>
       </footer>
-    </div>
+    </motion.div>
   );
 };
 
