@@ -33,7 +33,12 @@ const Landing = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col md:flex-row">
+    <motion.div
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, scale: 1.02, filter: "blur(8px)" }}
+      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+      className="h-screen overflow-hidden flex flex-col md:flex-row"
+    >
       {/* Left – hero side */}
       <div className="flex-1 flex flex-col items-center justify-center px-8 md:px-14 py-10 relative bg-background">
         {/* Soft radial glow behind hero */}
