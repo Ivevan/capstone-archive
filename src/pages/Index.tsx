@@ -484,7 +484,12 @@ const Index = () => {
           </div>
         ) : (
           <>
-            <div className="rounded-lg border border-border/60 bg-card overflow-x-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
+              className="rounded-lg border border-border/60 bg-card overflow-x-auto"
+            >
               <Table className="min-w-[500px] sm:min-w-0">
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
@@ -507,18 +512,18 @@ const Index = () => {
                     <TableHead className="text-center w-[60px]">Drive</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody key={`page-${currentPage}-${sortField}-${sortDir}-${search}-${searchCategory}`}>
                   {paginatedItems.map((project, index) => {
                     const driveUrl = normalizeDriveLink(project.driveLink);
                     const rowNumber = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
                     return (
                     <motion.tr
                       key={project.id}
-                      initial={{ opacity: 0, y: 8 }}
+                      initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{
-                        duration: 0.35,
-                        delay: 0.5 + index * 0.05,
+                        duration: 0.3,
+                        delay: 0.55 + index * 0.04,
                         ease: [0.4, 0, 0.2, 1],
                       }}
                       className="cursor-pointer border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50"
