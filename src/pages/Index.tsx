@@ -319,7 +319,12 @@ const Index = () => {
       className="min-h-screen bg-background flex flex-col"
     >
       {/* Hero / Header */}
-      <header className="border-b border-border/60 bg-card">
+      <motion.header
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
+        className="border-b border-border/60 bg-card"
+      >
         <div className="container max-w-6xl px-4 sm:px-6 py-3 flex items-center gap-2">
           <GraduationCap className="text-accent shrink-0 h-[36px] w-[36px]" />
           <h1 className="font-serif font-bold text-foreground tracking-tight text-3xl sm:text-2xl">
@@ -332,6 +337,9 @@ const Index = () => {
             <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
             <span className="hidden sm:inline">Back to Home</span>
             <span className="sm:hidden">Home</span>
+            <kbd className="hidden sm:inline-flex items-center justify-center h-[18px] min-w-[26px] px-1.5 ml-1 rounded border border-border/70 bg-muted/50 text-[10px] font-sans font-medium text-muted-foreground/80 group-hover:border-border group-hover:text-foreground/80 transition-colors">
+              Esc
+            </kbd>
           </Link>
         </div>
         <div className="container max-w-6xl px-4 sm:px-6 pb-3">
@@ -339,10 +347,15 @@ const Index = () => {
             Browse, search, and manage academic capstone project records in one place.
           </p>
         </div>
-      </header>
+      </motion.header>
 
       {/* Search + Actions */}
-      <div className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6 pb-8">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.28, ease: [0.4, 0, 0.2, 1] }}
+        className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6 pb-8"
+      >
         <div className="flex flex-col gap-3">
           <div className="flex gap-2 w-full">
             <Select value={searchCategory} onValueChange={setSearchCategory}>
@@ -454,7 +467,7 @@ const Index = () => {
             {filtered.length} project{filtered.length !== 1 ? "s" : ""}
           </span>
         </div>
-      </div>
+      </motion.div>
 
       {/* Table */}
       <div className="container max-w-6xl px-4 sm:px-6 pb-12">
@@ -471,7 +484,12 @@ const Index = () => {
           </div>
         ) : (
           <>
-            <div className="rounded-lg border border-border/60 bg-card overflow-x-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
+              className="rounded-lg border border-border/60 bg-card overflow-x-auto"
+            >
               <Table className="min-w-[500px] sm:min-w-0">
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
@@ -494,18 +512,18 @@ const Index = () => {
                     <TableHead className="text-center w-[60px]">Drive</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody key={`page-${currentPage}-${sortField}-${sortDir}-${search}-${searchCategory}`}>
                   {paginatedItems.map((project, index) => {
                     const driveUrl = normalizeDriveLink(project.driveLink);
                     const rowNumber = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
                     return (
                     <motion.tr
                       key={project.id}
-                      initial={{ opacity: 0, y: 8 }}
+                      initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{
-                        duration: 0.35,
-                        delay: 0.5 + index * 0.05,
+                        duration: 0.3,
+                        delay: 0.55 + index * 0.04,
                         ease: [0.4, 0, 0.2, 1],
                       }}
                       className="cursor-pointer border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50"
@@ -548,7 +566,7 @@ const Index = () => {
                   })}
                 </TableBody>
               </Table>
-            </div>
+            </motion.div>
             {totalPages > 1 && (() => {
               const pages: (number | "...")[] = [];
               if (totalPages <= 5) {
