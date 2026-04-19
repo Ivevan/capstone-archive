@@ -111,6 +111,15 @@ const Index = () => {
   const [detailOpen, setDetailOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    if (tableRef.current) {
+      const top = tableRef.current.getBoundingClientRect().top + window.scrollY - 96;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
 
   const toggleSort = (field: SortField) => {
     if (sortField === field) {
