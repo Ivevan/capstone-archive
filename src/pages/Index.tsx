@@ -566,7 +566,7 @@ const Index = () => {
                   })}
                 </TableBody>
               </Table>
-            </div>
+            </motion.div>
             {totalPages > 1 && (() => {
               const pages: (number | "...")[] = [];
               if (totalPages <= 5) {
