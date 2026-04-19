@@ -111,6 +111,15 @@ const Index = () => {
   const [detailOpen, setDetailOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    if (tableRef.current) {
+      const top = tableRef.current.getBoundingClientRect().top + window.scrollY - 96;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
 
   const toggleSort = (field: SortField) => {
     if (sortField === field) {
@@ -337,9 +346,6 @@ const Index = () => {
             <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
             <span className="hidden sm:inline">Back to Home</span>
             <span className="sm:hidden">Home</span>
-            <kbd className="hidden sm:inline-flex items-center justify-center h-[18px] min-w-[26px] px-1.5 ml-1 rounded border border-border/70 bg-muted/50 text-[10px] font-sans font-medium text-muted-foreground/80 group-hover:border-border group-hover:text-foreground/80 transition-colors">
-              Esc
-            </kbd>
           </Link>
         </div>
         <div className="container max-w-6xl px-4 sm:px-6 pb-3">
@@ -485,10 +491,11 @@ const Index = () => {
         ) : (
           <>
             <motion.div
+              ref={tableRef}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              className="rounded-lg border border-border/60 bg-card overflow-x-auto"
+              className="rounded-lg border border-border/60 bg-card overflow-x-auto scroll-mt-24"
             >
               <Table className="min-w-[500px] sm:min-w-0">
                 <TableHeader>
@@ -584,19 +591,19 @@ const Index = () => {
                     {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} of {filtered.length}
                   </span>
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" className="h-8 w-8" disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8" disabled={currentPage === 1} onClick={() => goToPage(currentPage - 1)}>
                       <ChevronLeft className="w-4 h-4" />
                     </Button>
                     {pages.map((page, idx) =>
                       page === "..." ? (
                         <span key={`e${idx}`} className="w-8 h-8 flex items-center justify-center text-xs text-muted-foreground">…</span>
                       ) : (
-                        <Button key={page} variant={page === currentPage ? "default" : "ghost"} size="icon" className="h-8 w-8 text-xs" onClick={() => setCurrentPage(page as number)}>
+                        <Button key={page} variant={page === currentPage ? "default" : "ghost"} size="icon" className="h-8 w-8 text-xs" onClick={() => goToPage(page as number)}>
                           {page}
                         </Button>
                       )
                     )}
-                    <Button variant="ghost" size="icon" className="h-8 w-8" disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8" disabled={currentPage === totalPages} onClick={() => goToPage(currentPage + 1)}>
                       <ChevronRight className="w-4 h-4" />
                     </Button>
                   </div>
