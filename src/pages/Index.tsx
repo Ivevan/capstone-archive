@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CapstoneProject, SortField, SortDirection } from "@/types/capstone";
 import { fetchProjects, addProject as addProjectToDb, addProjectsBatch } from "@/lib/firestore";
 import AddProjectDialog from "@/components/AddProjectDialog";
@@ -72,6 +72,7 @@ const splitPeople = (raw: string): string[] => {
 };
 
 const Index = () => {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState<CapstoneProject[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -81,6 +82,27 @@ const Index = () => {
       .catch(() => toast.error("Failed to load projects from database."))
       .finally(() => setLoading(false));
   }, []);
+
+  // Esc key shortcut: navigate back to landing page
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      const target = e.target as HTMLElement | null;
+      // Ignore if user is typing in an input/textarea/contenteditable or a dialog is open
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+      if (document.querySelector('[role="dialog"]')) return;
+      navigate("/");
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [navigate]);
   const [search, setSearch] = useState("");
   const [searchCategory, setSearchCategory] = useState<string>("all");
   const [sortField, setSortField] = useState<SortField>("date");
@@ -477,9 +499,16 @@ const Index = () => {
                     const driveUrl = normalizeDriveLink(project.driveLink);
                     const rowNumber = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
                     return (
-                    <TableRow
+                    <motion.tr
                       key={project.id}
-                      className="cursor-pointer"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: 0.35,
+                        delay: 0.5 + index * 0.05,
+                        ease: [0.4, 0, 0.2, 1],
+                      }}
+                      className="cursor-pointer border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50"
                       onClick={() => handleRowClick(project)}
                     >
                       <TableCell className="text-center text-muted-foreground">{rowNumber}</TableCell>
@@ -514,7 +543,7 @@ const Index = () => {
                           <span className="text-muted-foreground/30">—</span>
                         )}
                       </TableCell>
-                    </TableRow>
+                    </motion.tr>
                     );
                   })}
                 </TableBody>
