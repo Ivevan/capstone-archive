@@ -350,7 +350,12 @@ const Index = () => {
       </motion.header>
 
       {/* Search + Actions */}
-      <div className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6 pb-8">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.28, ease: [0.4, 0, 0.2, 1] }}
+        className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6 pb-8"
+      >
         <div className="flex flex-col gap-3">
           <div className="flex gap-2 w-full">
             <Select value={searchCategory} onValueChange={setSearchCategory}>
@@ -462,7 +467,7 @@ const Index = () => {
             {filtered.length} project{filtered.length !== 1 ? "s" : ""}
           </span>
         </div>
-      </div>
+      </motion.div>
 
       {/* Table */}
       <div className="container max-w-6xl px-4 sm:px-6 pb-12">
