@@ -337,9 +337,6 @@ const Index = () => {
             <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
             <span className="hidden sm:inline">Back to Home</span>
             <span className="sm:hidden">Home</span>
-            <kbd className="hidden sm:inline-flex items-center justify-center h-[18px] min-w-[26px] px-1.5 ml-1 rounded border border-border/70 bg-muted/50 text-[10px] font-sans font-medium text-muted-foreground/80 group-hover:border-border group-hover:text-foreground/80 transition-colors">
-              Esc
-            </kbd>
           </Link>
         </div>
         <div className="container max-w-6xl px-4 sm:px-6 pb-3">
