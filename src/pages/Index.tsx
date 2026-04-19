@@ -72,6 +72,7 @@ const splitPeople = (raw: string): string[] => {
 };
 
 const Index = () => {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState<CapstoneProject[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -81,6 +82,27 @@ const Index = () => {
       .catch(() => toast.error("Failed to load projects from database."))
       .finally(() => setLoading(false));
   }, []);
+
+  // Esc key shortcut: navigate back to landing page
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      const target = e.target as HTMLElement | null;
+      // Ignore if user is typing in an input/textarea/contenteditable or a dialog is open
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+      if (document.querySelector('[role="dialog"]')) return;
+      navigate("/");
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [navigate]);
   const [search, setSearch] = useState("");
   const [searchCategory, setSearchCategory] = useState<string>("all");
   const [sortField, setSortField] = useState<SortField>("date");
