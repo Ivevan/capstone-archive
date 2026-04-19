@@ -491,10 +491,11 @@ const Index = () => {
         ) : (
           <>
             <motion.div
+              ref={tableRef}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              className="rounded-lg border border-border/60 bg-card overflow-x-auto"
+              className="rounded-lg border border-border/60 bg-card overflow-x-auto scroll-mt-24"
             >
               <Table className="min-w-[500px] sm:min-w-0">
                 <TableHeader>
