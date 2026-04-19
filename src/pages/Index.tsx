@@ -591,19 +591,19 @@ const Index = () => {
                     {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} of {filtered.length}
                   </span>
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" className="h-8 w-8" disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8" disabled={currentPage === 1} onClick={() => goToPage(currentPage - 1)}>
                       <ChevronLeft className="w-4 h-4" />
                     </Button>
                     {pages.map((page, idx) =>
                       page === "..." ? (
                         <span key={`e${idx}`} className="w-8 h-8 flex items-center justify-center text-xs text-muted-foreground">…</span>
                       ) : (
-                        <Button key={page} variant={page === currentPage ? "default" : "ghost"} size="icon" className="h-8 w-8 text-xs" onClick={() => setCurrentPage(page as number)}>
+                        <Button key={page} variant={page === currentPage ? "default" : "ghost"} size="icon" className="h-8 w-8 text-xs" onClick={() => goToPage(page as number)}>
                           {page}
                         </Button>
                       )
                     )}
-                    <Button variant="ghost" size="icon" className="h-8 w-8" disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8" disabled={currentPage === totalPages} onClick={() => goToPage(currentPage + 1)}>
                       <ChevronRight className="w-4 h-4" />
                     </Button>
                   </div>
