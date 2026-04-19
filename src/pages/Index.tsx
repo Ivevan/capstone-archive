@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CapstoneProject, SortField, SortDirection } from "@/types/capstone";
 import { fetchProjects, addProject as addProjectToDb, addProjectsBatch } from "@/lib/firestore";
 import AddProjectDialog from "@/components/AddProjectDialog";
