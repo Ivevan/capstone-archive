@@ -319,7 +319,12 @@ const Index = () => {
       className="min-h-screen bg-background flex flex-col"
     >
       {/* Hero / Header */}
-      <header className="border-b border-border/60 bg-card">
+      <motion.header
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
+        className="border-b border-border/60 bg-card"
+      >
         <div className="container max-w-6xl px-4 sm:px-6 py-3 flex items-center gap-2">
           <GraduationCap className="text-accent shrink-0 h-[36px] w-[36px]" />
           <h1 className="font-serif font-bold text-foreground tracking-tight text-3xl sm:text-2xl">
@@ -332,6 +337,9 @@ const Index = () => {
             <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
             <span className="hidden sm:inline">Back to Home</span>
             <span className="sm:hidden">Home</span>
+            <kbd className="hidden sm:inline-flex items-center justify-center h-[18px] min-w-[26px] px-1.5 ml-1 rounded border border-border/70 bg-muted/50 text-[10px] font-sans font-medium text-muted-foreground/80 group-hover:border-border group-hover:text-foreground/80 transition-colors">
+              Esc
+            </kbd>
           </Link>
         </div>
         <div className="container max-w-6xl px-4 sm:px-6 pb-3">
@@ -339,7 +347,7 @@ const Index = () => {
             Browse, search, and manage academic capstone project records in one place.
           </p>
         </div>
-      </header>
+      </motion.header>
 
       {/* Search + Actions */}
       <div className="container max-w-6xl px-4 sm:px-6 py-4 sm:py-6 pb-8">
